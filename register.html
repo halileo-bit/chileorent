@@ -67,26 +67,18 @@
                         
                         <div class="space-y-2 text-xs">
                             <label class="p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 flex items-start gap-2 block">
-                                <input type="radio" name="account_role" value="renter" checked class="mt-0.5 text-indigo-600">
+                                <input type="radio" name="account_role" value="customer" checked class="mt-0.5 text-indigo-600">
                                 <div>
-                                    <strong class="text-gray-900 block">🎭 Perental Kostum (Customer)</strong>
-                                    <p class="text-gray-500">Saya ingin merental kostum cosplay untuk event/photoshoot.</p>
+                                    <strong class="text-gray-900 block">🎭 Customer (Cosplayer/Pemilik Rental Lama)</strong>
+                                    <p class="text-gray-500">Sewa kostum cosplay untuk event/photoshoot, atau ajukan alih fungsi kostum lama (titip sewa / akuisisi) dengan nego 0-8%.</p>
                                 </div>
                             </label>
 
-                            <label class="p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 flex items-start gap-2 block">
-                                <input type="radio" name="account_role" value="seller" class="mt-0.5 text-indigo-600">
+                            <label class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl cursor-pointer hover:border-indigo-500 flex items-start gap-2 block">
+                                <input type="radio" name="account_role" value="admin" class="mt-0.5 text-indigo-600">
                                 <div>
-                                    <strong class="text-gray-900 block">🔄 Penjual / Pemilik Kostum Lama</strong>
-                                    <p class="text-gray-500">Pemilik usaha rental yang menutup toko atau cosplayer yang ingin jual/titip sewa.</p>
-                                </div>
-                            </label>
-
-                            <label class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl cursor-pointer flex items-start gap-2 block">
-                                <input type="radio" name="account_role" value="owner_admin" class="mt-0.5 text-indigo-600">
-                                <div>
-                                    <strong class="text-indigo-900 block">👑 Pemilik Rental Utama / Pengelola</strong>
-                                    <p class="text-indigo-700">Pendaftaran verifikasi kemitraan pemilik rental utama & admin platform.</p>
+                                    <strong class="text-indigo-900 block">👑 Admin</strong>
+                                    <p class="text-indigo-700">Pendaftaran verifikasi kemitraan pemilik rental utama & admin platform Chileorent.</p>
                                 </div>
                             </label>
                         </div>
@@ -205,7 +197,7 @@
         document.getElementById('form-registrasi')?.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const role = document.querySelector('input[name="account_role"]:checked')?.value || 'renter';
+            const role = document.querySelector('input[name="account_role"]:checked')?.value || 'customer';
             const fullname = document.getElementById('reg-fullname')?.value || 'Pengguna Baru';
             const email = document.getElementById('reg-email')?.value || '';
             const phone = document.getElementById('reg-whatsapp')?.value || '';
@@ -219,14 +211,13 @@
                 isVerified: true
             });
 
-            alert('✅ Pendaftaran Berhasil!\n\nSelamat datang, ' + fullname + '!\nAkun Anda telah aktif sebagai ' + (role === 'owner_admin' ? 'Pemilik Rental / Admin' : role === 'seller' ? 'Penjual Alih Fungsi' : 'Perental Kostum') + '.');
+            const roleTitle = (role === 'admin' || role === 'owner_admin') ? 'Admin' : 'Customer (Cosplayer/Pemilik Rental Lama)';
+            alert('✅ Pendaftaran Berhasil!\n\nSelamat datang, ' + fullname + '!\nAkun Anda telah aktif sebagai ' + roleTitle + '.');
 
-            if (role === 'owner_admin') {
+            if (role === 'admin' || role === 'owner_admin') {
                 window.location.href = 'admin-dashboard.html';
-            } else if (role === 'seller') {
-                window.location.href = 'dashboard-rental.html#view-penjual-terbatas';
             } else {
-                window.location.href = 'dashboard-rental.html#view-perental-terbatas';
+                window.location.href = 'dashboard-rental.html';
             }
         });
     </script>

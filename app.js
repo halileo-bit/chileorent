@@ -361,15 +361,11 @@ const ChileoUI = {
                 text === 'Dashboard Penjual' || 
                 text === 'Dashboard Pengelola') {
                 
-                if (role === 'renter') {
-                    link.textContent = 'Dashboard Perental';
-                    link.setAttribute('href', 'dashboard-rental.html#view-perental-terbatas');
-                    link.setAttribute('title', 'Dashboard Khusus Perental (Lacak Sewa & Resi)');
-                } else if (role === 'seller') {
-                    link.textContent = 'Dashboard Penjual';
-                    link.setAttribute('href', 'dashboard-rental.html#view-penjual-terbatas');
-                    link.setAttribute('title', 'Dashboard Khusus Penjual (Alih Fungsi & Grade)');
-                } else if (role === 'owner_admin') {
+                if (role === 'customer' || role === 'renter' || role === 'seller') {
+                    link.textContent = 'Dashboard Customer';
+                    link.setAttribute('href', 'dashboard-rental.html');
+                    link.setAttribute('title', 'Dashboard Customer (Lacak Sewa, Resi & Alih Fungsi Kostum)');
+                } else if (role === 'admin' || role === 'owner_admin') {
                     link.textContent = 'Dashboard Pengelola';
                     link.setAttribute('href', 'dashboard-rental.html#view-owner-luas');
                     link.setAttribute('title', 'Dashboard Pemilik Usaha Rental & Admin');
@@ -389,13 +385,10 @@ const ChileoUI = {
             const registerLink = headerActions.querySelector('a[href*="register.html"]');
 
             if (role && role !== 'guest' && session.name) {
-                let roleLabel = 'Perental';
+                let roleLabel = 'Customer';
                 let roleColor = 'bg-emerald-50 text-emerald-800 border-emerald-300';
-                if (role === 'seller') {
-                    roleLabel = 'Penjual';
-                    roleColor = 'bg-purple-50 text-purple-800 border-purple-300';
-                } else if (role === 'owner_admin') {
-                    roleLabel = 'Admin/Owner';
+                if (role === 'admin' || role === 'owner_admin') {
+                    roleLabel = 'Admin';
                     roleColor = 'bg-amber-50 text-amber-800 border-amber-300';
                 }
 
@@ -410,7 +403,7 @@ const ChileoUI = {
                 }
 
                 let adminShortcut = '';
-                if (role === 'owner_admin') {
+                if (role === 'admin' || role === 'owner_admin') {
                     adminShortcut = `<a href="admin-dashboard.html" class="px-2.5 py-1.5 text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg transition">⚙️ Admin Pusat</a>`;
                 }
 

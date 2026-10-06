@@ -66,25 +66,17 @@
                         <legend class="text-xs font-bold uppercase text-gray-500 tracking-wider">Masuk Sebagai Peran:</legend>
                         <div class="space-y-2 text-xs">
                             <label class="p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 flex items-start gap-2 block">
-                                <input type="radio" name="user_role" value="renter" checked class="mt-0.5 text-indigo-600">
+                                <input type="radio" name="user_role" value="customer" checked class="mt-0.5 text-indigo-600">
                                 <div>
-                                    <strong class="text-gray-900 block">🎭 Perental (Customer Cosplayer)</strong>
-                                    <small class="text-gray-500">Akses terbatas: Lacak status sewa, nomor resi kurir, pelunasan DP, dan refund uang jaminan.</small>
+                                    <strong class="text-gray-900 block">🎭 Customer (Cosplayer/Pemilik Rental Lama)</strong>
+                                    <small class="text-gray-500">Akses pengguna: Lacak status sewa & nomor resi, otomatisasi formulir alih fungsi kostum, serta pantau hasil kurasi Grade & nego (0-8%).</small>
                                 </div>
                             </label>
 
-                            <label class="p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-500 flex items-start gap-2 block">
-                                <input type="radio" name="user_role" value="seller" class="mt-0.5 text-indigo-600">
+                            <label class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl cursor-pointer hover:border-indigo-500 flex items-start gap-2 block">
+                                <input type="radio" name="user_role" value="admin" class="mt-0.5 text-indigo-600">
                                 <div>
-                                    <strong class="text-gray-900 block">🔄 Penjual (Pemilik Rental Lama / Cosplayer)</strong>
-                                    <small class="text-gray-500">Akses terbatas: Auto-identifikasi formulir alih fungsi, pantau kurasi Grade & nego (0-8%).</small>
-                                </div>
-                            </label>
-
-                            <label class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl cursor-pointer flex items-start gap-2 block">
-                                <input type="radio" name="user_role" value="owner_admin" class="mt-0.5 text-indigo-600">
-                                <div>
-                                    <strong class="text-indigo-900 block">👑 Pemilik Usaha Rental Kami + Admin Platform</strong>
+                                    <strong class="text-indigo-900 block">👑 Admin</strong>
                                     <small class="text-indigo-700">Akses luas: Admin Dashboard (kurasi & escrow) + Rental Dashboard (kelola inventaris & jual putus unit toko).</small>
                                 </div>
                             </label>
@@ -171,10 +163,8 @@
 
         roleInputs.forEach(input => {
             input.addEventListener('change', () => {
-                if (input.value === 'owner_admin') {
+                if (input.value === 'admin' || input.value === 'owner_admin') {
                     idInput.value = 'admin@chileorent.com';
-                } else if (input.value === 'seller') {
-                    idInput.value = 'sakura@wardrobe.id';
                 } else {
                     idInput.value = 'alisa@cosplay.id';
                 }
@@ -183,7 +173,7 @@
 
         document.getElementById('form-login').addEventListener('submit', function(e) {
             e.preventDefault();
-            const selectedRole = document.querySelector('input[name="user_role"]:checked')?.value || 'renter';
+            const selectedRole = document.querySelector('input[name="user_role"]:checked')?.value || 'customer';
             const identifier = idInput ? idInput.value.trim() : 'Pengguna';
 
             let sessionData = {
@@ -192,20 +182,17 @@
                 isVerified: true
             };
 
-            if (selectedRole === 'owner_admin') {
+            if (selectedRole === 'admin' || selectedRole === 'owner_admin') {
                 sessionData.name = 'Kurogane Hub & Administrator';
+                sessionData.role = 'admin';
                 ChileoDB.setUserSession(sessionData);
                 window.location.href = 'admin-dashboard.html';
-            } else if (selectedRole === 'seller') {
-                sessionData.name = identifier.includes('@') ? (identifier.split('@')[0] === 'sakura' ? 'Sakura Wardrobe (Eks Rental)' : identifier.split('@')[0]) : identifier;
-                sessionData.city = 'Kota Bandung';
-                ChileoDB.setUserSession(sessionData);
-                window.location.href = 'dashboard-rental.html#view-penjual-terbatas';
             } else {
-                sessionData.name = identifier.includes('@') ? (identifier.split('@')[0] === 'alisa' ? 'Alisa Putri (Cosplayer)' : identifier.split('@')[0]) : identifier;
-                sessionData.city = 'Bandung';
+                sessionData.name = identifier.includes('@') ? (identifier.split('@')[0] === 'alisa' ? 'Alisa Putri (Customer Cosplayer)' : identifier.split('@')[0]) : identifier;
+                sessionData.city = 'Kota Bandung';
+                sessionData.role = 'customer';
                 ChileoDB.setUserSession(sessionData);
-                window.location.href = 'dashboard-rental.html#view-perental-terbatas';
+                window.location.href = 'dashboard-rental.html';
             }
         });
     </script>
