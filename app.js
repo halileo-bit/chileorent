@@ -376,6 +376,16 @@ const ChileoUI = {
             }
         });
 
+        // Sembunyikan navigasi katalog/alih fungsi publik jika login sebagai admin
+        if (role === 'admin' || role === 'owner_admin') {
+            const adminHiddenNavs = document.querySelectorAll('header nav a[href*="catalog.html"], header nav a[href*="alih-fungsi.html"]');
+            adminHiddenNavs.forEach(link => {
+                const li = link.closest('li');
+                if (li) li.style.display = 'none';
+                else link.style.display = 'none';
+            });
+        }
+
         // 2. Sinkronkan tombol Auth Header (Masuk & Daftar Akun -> User Badge & Keluar)
         const headerActions = document.querySelector('header .flex.items-center.gap-2.order-2') ||
                               document.querySelector('header .flex.items-center.gap-2:not(#navigasi-utama)');
