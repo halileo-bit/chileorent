@@ -396,6 +396,24 @@ const ChileoUI = {
             if (logoLink) {
                 logoLink.setAttribute('href', 'dashboard-rental.html#view-owner-luas');
             }
+        } else {
+            // Tampilkan kembali semua menu (4 menu) dan breadcrumb untuk customer atau tamu
+            const navItems = document.querySelectorAll('header nav a[href*="index.html"], header nav a[href*="catalog.html"], header nav a[href*="alih-fungsi.html"]');
+            navItems.forEach(link => {
+                const li = link.closest('li');
+                if (li) li.style.display = '';
+                else link.style.display = '';
+            });
+
+            const breadcrumbNavs = document.querySelectorAll('.breadcrumb-nav');
+            breadcrumbNavs.forEach(b => {
+                b.style.display = '';
+            });
+
+            const logoLink = document.querySelector('header a[href*="dashboard-rental.html#view-owner-luas"]');
+            if (logoLink) {
+                logoLink.setAttribute('href', 'index.html');
+            }
         }
 
         // 2. Sinkronkan tombol Auth Header (Masuk & Daftar Akun -> User Badge & Keluar)

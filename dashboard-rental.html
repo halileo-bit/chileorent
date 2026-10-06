@@ -23,6 +23,8 @@
             <nav id="navigasi-utama" aria-label="Navigasi Utama" class="order-3 md:order-2 w-full md:w-auto">
                 <ul class="flex flex-wrap items-center gap-1 md:gap-4 text-sm font-medium text-gray-600">
                     <li><a href="index.html" class="px-2 py-1 hover:text-indigo-600 transition">Beranda</a></li>
+                    <li><a href="catalog.html" class="px-2 py-1 hover:text-indigo-600 transition">Katalog Sewa</a></li>
+                    <li><a href="alih-fungsi.html" class="px-2 py-1 hover:text-indigo-600 transition">Alih Fungsi Kostum (Nego 0-8%)</a></li>
                     <li><a href="dashboard-rental.html" aria-current="page" class="px-2 py-1 text-indigo-600 font-semibold border-b-2 border-indigo-600">Dashboard Rental</a></li>
                 </ul>
             </nav>
@@ -409,15 +411,22 @@
             });
 
             const breadcrumbNav = document.querySelector('.breadcrumb-nav');
-            const homeNavLink = document.querySelector('#navigasi-utama a[href*="index.html"]')?.closest('li');
+            const adminHideNavItems = document.querySelectorAll('#navigasi-utama a[href*="index.html"], #navigasi-utama a[href*="catalog.html"], #navigasi-utama a[href*="alih-fungsi.html"]');
 
             if (tabId === 'view-owner-luas') {
-                // Sembunyikan breadcrumb path dan menu Beranda untuk admin
+                // Sembunyikan breadcrumb path dan menu publik untuk admin
                 if (breadcrumbNav) breadcrumbNav.classList.add('hidden');
-                if (homeNavLink) homeNavLink.classList.add('hidden');
+                adminHideNavItems.forEach(el => {
+                    const li = el.closest('li');
+                    if (li) li.classList.add('hidden');
+                });
             } else {
+                // Tampilkan kembali semua 4 menu dan breadcrumb untuk customer
                 if (breadcrumbNav) breadcrumbNav.classList.remove('hidden');
-                if (homeNavLink) homeNavLink.classList.remove('hidden');
+                adminHideNavItems.forEach(el => {
+                    const li = el.closest('li');
+                    if (li) li.classList.remove('hidden');
+                });
             }
 
             const breadcrumbEl = document.getElementById('breadcrumb-dashboard-title');
