@@ -125,6 +125,33 @@
             <!-- KATALOG RESULTS -->
             <section class="flex-1 space-y-6" aria-labelledby="catalog-header-title">
                 
+                <!-- API INTEGRATION BANNER (PERTEMUAN 4: TASK 01 CONNECT TO API) -->
+                <div id="api-status-banner" class="bg-gradient-to-r from-indigo-50 via-white to-blue-50 border border-indigo-200 rounded-xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-3 w-3 relative">
+                            <span id="api-status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span id="api-status-dot" class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded">Task 01: Connect to API</span>
+                                <span id="api-status-text" class="text-xs font-semibold text-emerald-700">REST API Terhubung</span>
+                            </div>
+                            <p id="api-status-detail" class="text-xs text-gray-500 mt-0.5">
+                                Endpoint: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-indigo-700 font-mono text-[11px]">GET data/costumes.json</code> | Dimuat via Fetch API
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="loadCostumesFromAPI(true)" class="px-3 py-1.5 text-xs font-medium text-indigo-700 bg-white hover:bg-indigo-50 border border-indigo-300 rounded-lg shadow-sm transition flex items-center gap-1.5">
+                            <span>🔄</span> Uji Fetch API
+                        </button>
+                        <button type="button" onclick="toggleApiModal(true)" class="px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition flex items-center gap-1.5">
+                            <span>{ ; }</span> Response JSON
+                        </button>
+                    </div>
+                </div>
+
                 <header class="bg-white p-4 border border-gray-200 rounded-xl flex flex-wrap items-center justify-between gap-4 shadow-sm">
                     <div>
                         <h2 id="catalog-header-title" class="text-xl font-bold text-gray-900">Daftar Kostum Siap Sewa</h2>
@@ -208,11 +235,143 @@
         </div>
     </footer>
 
+    <!-- MODAL REST API JSON VIEWER (TASK 01: CONNECT TO API) -->
+    <div id="api-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-gray-200 overflow-hidden">
+            <header class="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">⚡</span>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-900">Task 01: Connect to API Inspector</h3>
+                        <p class="text-xs text-gray-500">Hasil request <code class="font-mono text-indigo-600">fetch('data/costumes.json')</code></p>
+                    </div>
+                </div>
+                <button type="button" onclick="toggleApiModal(false)" class="text-gray-400 hover:text-gray-600 text-xl font-bold p-1 leading-none">&times;</button>
+            </header>
+            <div class="p-4 space-y-3 overflow-y-auto flex-1 text-xs">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div class="p-2.5 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-[10px] text-gray-500 uppercase block font-semibold">HTTP Method</span>
+                        <strong class="text-indigo-700 font-mono text-xs">GET</strong>
+                    </div>
+                    <div class="p-2.5 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-[10px] text-gray-500 uppercase block font-semibold">Status Code</span>
+                        <strong id="modal-api-status" class="text-emerald-700 font-mono text-xs">200 OK</strong>
+                    </div>
+                    <div class="p-2.5 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-[10px] text-gray-500 uppercase block font-semibold">Latency / Durasi</span>
+                        <strong id="modal-api-latency" class="text-indigo-700 font-mono text-xs">0 ms</strong>
+                    </div>
+                    <div class="p-2.5 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-[10px] text-gray-500 uppercase block font-semibold">Total Item JSON</span>
+                        <strong id="modal-api-count" class="text-gray-800 font-mono text-xs">0 Kostum</strong>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[11px] font-bold text-gray-700 block mb-1">Payload JSON Diterima:</span>
+                    <pre id="modal-json-content" class="bg-gray-900 text-emerald-400 p-4 rounded-xl overflow-x-auto font-mono text-[11px] leading-relaxed max-h-96 whitespace-pre-wrap"></pre>
+                </div>
+            </div>
+            <footer class="p-3 border-t border-gray-200 bg-gray-50 flex justify-between items-center text-xs">
+                <span class="text-gray-500">Materi Pertemuan 4 Web Programming: Fetch API & REST JSON</span>
+                <button type="button" onclick="toggleApiModal(false)" class="px-4 py-1.5 bg-gray-800 hover:bg-gray-900 text-white rounded-lg font-medium transition">Tutup</button>
+            </footer>
+        </div>
+    </div>
+
     <!-- ENGINE SCRIPT & KATALOG CONTROLLER -->
     <script src="app.js"></script>
     <script>
+        let allCostumesData = [];
+        let currentApiMeta = null;
+
+        function toggleApiModal(open) {
+            const modal = document.getElementById('api-modal');
+            if (!modal) return;
+            if (open) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // PERTEMUAN 4 TASK 01: Memuat data dari REST API endpoint menggunakan Fetch API
+        function loadCostumesFromAPI(showToast = false) {
+            const grid = document.getElementById('catalog-grid');
+            if (grid) {
+                grid.innerHTML = `
+                    <div class="col-span-full p-12 text-center space-y-3 bg-white border border-gray-200 rounded-2xl">
+                        <div class="inline-block animate-spin text-3xl">⏳</div>
+                        <p class="text-sm font-semibold text-gray-700">Mengambil data dari REST API...</p>
+                        <p class="text-xs text-indigo-600 font-mono">fetch('data/costumes.json')</p>
+                    </div>
+                `;
+            }
+
+            // Memanggil Fetch API
+            ChileoAPI.fetchCostumes(
+                (data, meta) => {
+                    allCostumesData = data;
+                    currentApiMeta = meta;
+
+                    // Update banner status
+                    const statusText = document.getElementById('api-status-text');
+                    const statusDetail = document.getElementById('api-status-detail');
+                    const ping = document.getElementById('api-status-ping');
+                    const dot = document.getElementById('api-status-dot');
+
+                    if (statusText) statusText.textContent = `REST API Terhubung (${meta.source})`;
+                    if (statusDetail) {
+                        statusDetail.innerHTML = `Endpoint: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-indigo-700 font-mono text-[11px]">${meta.endpoint}</code> | ${data.length} Kostum dimuat via Fetch API (${meta.duration || 0}ms)`;
+                    }
+                    if (ping) ping.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75';
+                    if (dot) dot.className = 'relative inline-flex rounded-full h-3 w-3 bg-emerald-500';
+
+                    // Update modal info
+                    const modalStatus = document.getElementById('modal-api-status');
+                    const modalLatency = document.getElementById('modal-api-latency');
+                    const modalCount = document.getElementById('modal-api-count');
+                    const modalJson = document.getElementById('modal-json-content');
+
+                    if (modalStatus) modalStatus.textContent = meta.status ? `${meta.status} OK` : '200 OK (Cache)';
+                    if (modalLatency) modalLatency.textContent = `${meta.duration || 10} ms`;
+                    if (modalCount) modalCount.textContent = `${data.length} Kostum`;
+                    if (modalJson) modalJson.textContent = JSON.stringify(data, null, 2);
+
+                    renderCatalogItems();
+
+                    if (showToast) {
+                        alert(`✅ Sukses Terhubung ke REST API!\n\nEndpoint: ${meta.endpoint}\nTotal: ${data.length} item data kostum berhasil diterima via Fetch API (${meta.duration || 0} ms).`);
+                    }
+                },
+                (fallbackData, meta) => {
+                    allCostumesData = fallbackData;
+                    currentApiMeta = meta;
+
+                    const statusText = document.getElementById('api-status-text');
+                    const statusDetail = document.getElementById('api-status-detail');
+                    const ping = document.getElementById('api-status-ping');
+                    const dot = document.getElementById('api-status-dot');
+
+                    if (statusText) statusText.textContent = 'REST API Fallback (Offline/CORS)';
+                    if (statusDetail) {
+                        statusDetail.innerHTML = `Data dimuat dari local cache (${meta.error || 'CORS file://'}). Jalankan via Live Server untuk koneksi HTTP penuh.`;
+                    }
+                    if (ping) ping.className = 'hidden';
+                    if (dot) dot.className = 'relative inline-flex rounded-full h-3 w-3 bg-amber-500';
+
+                    const modalJson = document.getElementById('modal-json-content');
+                    if (modalJson) modalJson.textContent = JSON.stringify(fallbackData, null, 2);
+
+                    renderCatalogItems();
+                }
+            );
+        }
+
         function renderCatalogItems() {
-            const costumes = ChileoDB.getCostumes();
+            const costumes = allCostumesData.length > 0 ? allCostumesData : ChileoDB.getCostumes();
             const grid = document.getElementById('catalog-grid');
             const empty = document.getElementById('catalog-empty-state');
             if (!grid) return;
@@ -227,31 +386,39 @@
             const sortBy = document.getElementById('sort-select')?.value || 'popular';
 
             let filtered = costumes.filter(c => {
-                if (q && !c.title.toLowerCase().includes(q) && !c.character.toLowerCase().includes(q) && !c.series.toLowerCase().includes(q)) {
+                const titleStr = (c.title || c.judul || '').toLowerCase();
+                const charStr = (c.character || c.karakter || '').toLowerCase();
+                const seriesStr = (c.series || c.seri || '').toLowerCase();
+                const catStr = (c.category || c.kategori || '').toLowerCase();
+                const sizeStr = c.size || c.ukuran || '';
+                const gradeStr = c.grade || '';
+                const priceNum = Number(c.price || c.harga || 0);
+
+                if (q && !titleStr.includes(q) && !charStr.includes(q) && !seriesStr.includes(q)) {
                     return false;
                 }
-                if (checkedCategories.length > 0 && !checkedCategories.includes(c.category)) {
+                if (checkedCategories.length > 0 && !checkedCategories.includes(catStr)) {
                     return false;
                 }
-                if (checkedSizes.length > 0 && !checkedSizes.includes(c.size)) {
+                if (checkedSizes.length > 0 && !checkedSizes.includes(sizeStr)) {
                     return false;
                 }
                 if (selectedGender !== 'all' && c.gender !== selectedGender) {
                     return false;
                 }
-                if (checkedGrades.length > 0 && !checkedGrades.includes(c.grade)) {
+                if (checkedGrades.length > 0 && !checkedGrades.includes(gradeStr)) {
                     return false;
                 }
-                if (c.price < minPrice || c.price > maxPrice) {
+                if (priceNum < minPrice || priceNum > maxPrice) {
                     return false;
                 }
                 return true;
             });
 
-            if (sortBy === 'price_asc') filtered.sort((a, b) => a.price - b.price);
-            else if (sortBy === 'price_desc') filtered.sort((a, b) => b.price - a.price);
+            if (sortBy === 'price_asc') filtered.sort((a, b) => (a.price || a.harga) - (b.price || b.harga));
+            else if (sortBy === 'price_desc') filtered.sort((a, b) => (b.price || b.harga) - (a.price || a.harga));
             else if (sortBy === 'rating') filtered.sort((a, b) => b.rating - a.rating);
-            else filtered.sort((a, b) => b.rentCount - a.rentCount);
+            else filtered.sort((a, b) => (b.rentCount || b.jumlah_sewa || 0) - (a.rentCount || a.jumlah_sewa || 0));
 
             if (filtered.length === 0) {
                 grid.innerHTML = '';
@@ -265,33 +432,33 @@
                 <article class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
                     <div>
                         <div class="relative h-56 bg-gray-100 overflow-hidden">
-                            <img src="${c.image}" alt="${c.title}" class="w-full h-full object-cover">
+                            <img src="${c.image || c.gambar}" alt="${c.title || c.judul}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x500/3d5a80/ffffff?text=${encodeURIComponent(c.title || c.judul)}'">
                             <span class="absolute top-3 left-3 px-2 py-0.5 text-[11px] font-bold ${c.grade === 'A' ? 'bg-emerald-600' : 'bg-blue-600'} text-white rounded-md shadow">
                                 Grade ${c.grade}
                             </span>
                             <span class="absolute top-3 right-3 px-2 py-0.5 text-[11px] font-semibold bg-white/90 text-gray-800 rounded-md backdrop-blur-sm">
-                                Size ${c.size}
+                                Size ${c.size || c.ukuran}
                             </span>
                         </div>
                         <div class="p-4 space-y-2">
-                            <div class="text-[11px] font-bold text-indigo-600 uppercase">${c.series}</div>
+                            <div class="text-[11px] font-bold text-indigo-600 uppercase">${c.series || c.seri}</div>
                             <h3 class="font-bold text-gray-900 text-sm leading-snug">
-                                <a href="detail-kostum.html?id=${c.id}" class="hover:text-indigo-600">${c.title}</a>
+                                <a href="detail-kostum.html?id=${c.id}" class="hover:text-indigo-600">${c.title || c.judul}</a>
                             </h3>
                             <div class="flex items-center gap-1 text-xs text-amber-500">
                                 <span>★</span>
                                 <strong class="text-gray-800">${c.rating}</strong>
-                                <span class="text-gray-400">(${c.rentCount}x disewa)</span>
+                                <span class="text-gray-400">(${c.rentCount || c.jumlah_sewa || 0}x disewa)</span>
                             </div>
                             <div class="flex flex-wrap gap-1 text-[10px] text-gray-600 pt-1">
-                                ${c.includes.map(inc => `<span class="px-1.5 py-0.5 bg-gray-100 rounded">✓ ${inc}</span>`).join('')}
+                                ${(c.includes || c.kelengkapan || []).map(inc => `<span class="px-1.5 py-0.5 bg-gray-100 rounded">✓ ${inc}</span>`).join('')}
                             </div>
                         </div>
                     </div>
                     <div class="p-4 pt-0 border-t border-gray-100 flex items-center justify-between mt-3">
                         <div>
                             <span class="text-[10px] text-gray-400 block">Sewa 3 Hari:</span>
-                            <strong class="text-base font-bold text-indigo-600">${formatRupiah(c.price)}</strong>
+                            <strong class="text-base font-bold text-indigo-600">${formatRupiah(c.price || c.harga)}</strong>
                         </div>
                         <a href="detail-kostum.html?id=${c.id}" class="px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-sm">
                             Detail & Sewa &rarr;
@@ -302,7 +469,7 @@
 
             const counter = document.querySelector('#catalog-header-title + p');
             if (counter) {
-                counter.innerHTML = `Menampilkan <strong>${filtered.length} dari ${costumes.length}</strong> kostum terverifikasi dengan jaminan escrow otomatis.`;
+                counter.innerHTML = `Menampilkan <strong>${filtered.length} dari ${costumes.length}</strong> kostum terverifikasi dari REST API dengan jaminan escrow.`;
             }
         }
 
@@ -312,7 +479,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderCatalogItems();
+            loadCostumesFromAPI();
             document.getElementById('form-filter-katalog')?.addEventListener('input', renderCatalogItems);
             document.getElementById('form-filter-katalog')?.addEventListener('submit', (e) => {
                 e.preventDefault();

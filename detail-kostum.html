@@ -300,19 +300,46 @@
         function loadCostumeDetail() {
             const params = new URLSearchParams(window.location.search);
             const costumeId = params.get('id') || 'c1';
+
+            const updateUIWithCostume = (costume) => {
+                if (!costume) return;
+                currentCostume = {
+                    ...costume,
+                    title: costume.title || costume.judul,
+                    character: costume.character || costume.karakter,
+                    series: costume.series || costume.seri,
+                    size: costume.size || costume.ukuran,
+                    price: Number(costume.price || costume.harga || 0),
+                    image: costume.image || costume.gambar,
+                    owner: costume.owner || costume.pemilik
+                };
+
+                // Update DOM
+                const titleEl = document.querySelector('header h1') || document.querySelector('h1');
+                const breadcrumbEl = document.querySelector('.breadcrumb-nav li[aria-current="page"]');
+                const seriesEl = document.querySelector('header p strong');
+                const mainImg = document.querySelector('section[aria-label="Galeri Foto Kostum"] figure img');
+
+                if (titleEl) titleEl.textContent = currentCostume.title;
+                if (breadcrumbEl) breadcrumbEl.textContent = currentCostume.title;
+                if (seriesEl) seriesEl.textContent = currentCostume.series;
+                if (mainImg && currentCostume.image) mainImg.src = currentCostume.image;
+
+                calculateEscrowSummary();
+            };
+
+            // 1. Render cepat dari cache lokal
             const costumes = ChileoDB.getCostumes();
-            currentCostume = costumes.find(c => c.id === costumeId) || costumes[0];
+            const foundCached = costumes.find(c => String(c.id) === String(costumeId)) || costumes[0];
+            if (foundCached) updateUIWithCostume(foundCached);
 
-            // Update DOM
-            const titleEl = document.querySelector('header h1') || document.querySelector('h1');
-            const breadcrumbEl = document.querySelector('.breadcrumb-nav li[aria-current="page"]');
-            const seriesEl = document.querySelector('header p strong');
-
-            if (titleEl) titleEl.textContent = currentCostume.title;
-            if (breadcrumbEl) breadcrumbEl.textContent = currentCostume.title;
-            if (seriesEl) seriesEl.textContent = currentCostume.series;
-
-            calculateEscrowSummary();
+            // 2. Sinkronkan via Fetch API (Pertemuan 4: Connect to API)
+            if (typeof ChileoAPI !== 'undefined') {
+                ChileoAPI.fetchCostumes((data) => {
+                    const found = data.find(c => String(c.id) === String(costumeId)) || data[0];
+                    if (found) updateUIWithCostume(found);
+                });
+            }
         }
 
         function calculateEscrowSummary() {

@@ -148,12 +148,18 @@
         <section id="katalog-pilihan" class="py-16 bg-gray-50 border-t border-gray-200" aria-labelledby="katalog-title">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <header class="text-center max-w-3xl mx-auto mb-12">
-                    <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Katalog Terpopuler</span>
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                        <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Katalog Terpopuler</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            REST API Connected (Fetch: data/costumes.json)
+                        </span>
+                    </div>
                     <h2 id="katalog-title" class="text-3xl font-extrabold text-gray-900 sm:text-4xl mt-1">Kostum Cosplay Siap Sewa</h2>
-                    <p class="text-gray-600 mt-2">Semua kostum telah melalui verifikasi fisik dan siap dipakai untuk event atau sesi foto.</p>
+                    <p class="text-gray-600 mt-2">Data dimuat secara dinamis dari REST API menggunakan JavaScript Fetch API.</p>
                 </header>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div id="home-popular-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <article class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
                         <figure class="relative">
                             <img src="https://placehold.co/320x400/3d5a80/ffffff?text=Frieren+Sousou+no+Frieren" alt="Kostum Cosplay Frieren dari anime Sousou no Frieren" class="w-full h-64 object-cover">
@@ -493,7 +499,57 @@
         </div>
     </footer>
 
-    <!-- ENGINE SCRIPT -->
+    <!-- ENGINE SCRIPT & FETCH API INTEGRATION (PERTEMUAN 4: TASK 01) -->
     <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const homeGrid = document.getElementById('home-popular-grid');
+            if (homeGrid && typeof ChileoAPI !== 'undefined') {
+                // Fetch API request GET ke data/costumes.json sesuai materi kuliah Pertemuan 4
+                ChileoAPI.fetchCostumes(
+                    (data, meta) => {
+                        console.log('[Index] Berhasil memuat data dari REST API via Fetch:', meta);
+                        const popular = [...data].sort((a, b) => (b.rentCount || b.jumlah_sewa || 0) - (a.rentCount || a.jumlah_sewa || 0)).slice(0, 4);
+                        
+                        homeGrid.innerHTML = popular.map(c => `
+                            <article class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                                <figure class="relative h-64 overflow-hidden bg-gray-100">
+                                    <img src="${c.image || c.gambar}" alt="${c.title || c.judul}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/320x400/3d5a80/ffffff?text=${encodeURIComponent(c.title || c.judul)}'">
+                                    <span class="absolute top-2 left-2 ${c.grade === 'A' ? 'bg-emerald-600' : 'bg-blue-600'} text-white text-xs font-semibold px-2 py-1 rounded shadow">
+                                        Grade ${c.grade}
+                                    </span>
+                                    <span class="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-1.5 py-0.5 rounded shadow">
+                                        Size ${c.size || c.ukuran}
+                                    </span>
+                                </figure>
+                                <div class="p-4 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <span class="text-xs font-bold text-indigo-600 uppercase">${c.series || c.seri}</span>
+                                        <h3 class="font-bold text-gray-900 text-base mt-1">
+                                            <a href="detail-kostum.html?id=${c.id}" class="hover:text-indigo-600">${c.title || c.judul}</a>
+                                        </h3>
+                                        <p class="text-xs text-gray-600 mt-1">Ukuran: <strong>${c.size || c.ukuran}</strong> | Kelengkapan: ${(c.includes || c.kelengkapan || []).join(', ')}</p>
+                                        <p class="text-xs text-gray-500 mt-1">Mitra: <em class="not-italic text-gray-700">${c.owner || c.pemilik} (${c.rating} ★)</em></p>
+                                    </div>
+                                    <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                                        <p class="text-gray-900">
+                                            <span class="text-lg font-bold text-indigo-600">${formatRupiah(c.price || c.harga)}</span>
+                                            <span class="text-xs text-gray-500">/ 3 Hari</span>
+                                        </p>
+                                        <a href="detail-kostum.html?id=${c.id}" class="px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition">
+                                            Sewa
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        `).join('');
+                    },
+                    (fallback) => {
+                        console.log('[Index] Menggunakan fallback render');
+                    }
+                );
+            }
+        });
+    </script>
 </body>
 </html>
