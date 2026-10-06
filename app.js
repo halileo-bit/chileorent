@@ -376,14 +376,26 @@ const ChileoUI = {
             }
         });
 
-        // Sembunyikan navigasi katalog/alih fungsi publik jika login sebagai admin
+        // Sembunyikan navigasi publik (Beranda, Katalog, Alih Fungsi) dan breadcrumb jika login sebagai admin
         if (role === 'admin' || role === 'owner_admin') {
-            const adminHiddenNavs = document.querySelectorAll('header nav a[href*="catalog.html"], header nav a[href*="alih-fungsi.html"]');
+            const adminHiddenNavs = document.querySelectorAll('header nav a[href*="index.html"], header nav a[href*="catalog.html"], header nav a[href*="alih-fungsi.html"]');
             adminHiddenNavs.forEach(link => {
                 const li = link.closest('li');
                 if (li) li.style.display = 'none';
                 else link.style.display = 'none';
             });
+
+            // Sembunyikan breadcrumb path jika admin
+            const breadcrumbNavs = document.querySelectorAll('.breadcrumb-nav');
+            breadcrumbNavs.forEach(b => {
+                b.style.display = 'none';
+            });
+
+            // Arahkan logo brand Chileorent ke dashboard admin
+            const logoLink = document.querySelector('header a[href*="index.html"]');
+            if (logoLink) {
+                logoLink.setAttribute('href', 'dashboard-rental.html#view-owner-luas');
+            }
         }
 
         // 2. Sinkronkan tombol Auth Header (Masuk & Daftar Akun -> User Badge & Keluar)

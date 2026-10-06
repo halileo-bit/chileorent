@@ -408,6 +408,18 @@
                 }
             });
 
+            const breadcrumbNav = document.querySelector('.breadcrumb-nav');
+            const homeNavLink = document.querySelector('#navigasi-utama a[href*="index.html"]')?.closest('li');
+
+            if (tabId === 'view-owner-luas') {
+                // Sembunyikan breadcrumb path dan menu Beranda untuk admin
+                if (breadcrumbNav) breadcrumbNav.classList.add('hidden');
+                if (homeNavLink) homeNavLink.classList.add('hidden');
+            } else {
+                if (breadcrumbNav) breadcrumbNav.classList.remove('hidden');
+                if (homeNavLink) homeNavLink.classList.remove('hidden');
+            }
+
             const breadcrumbEl = document.getElementById('breadcrumb-dashboard-title');
             if (breadcrumbEl) {
                 if (tabId === 'view-customer') {
