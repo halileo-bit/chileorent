@@ -10,59 +10,28 @@
 
     <!-- HEADER -->
     <header id="header-utama" class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div class="flex items-center justify-between gap-2 lg:gap-6">
-                <!-- LOGO & BRAND -->
-                <div class="flex items-center gap-3 shrink-0">
-                    <a href="index.html" class="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition">
-                        <h1>Chileorent</h1>
-                    </a>
-                    <p class="hidden xl:block text-xs text-gray-500 border-l border-gray-300 pl-3">
-                        Marketplace Sewa & Solusi Alih Fungsi Kostum Cosplay
-                    </p>
-                </div>
-
-                <!-- DESKTOP NAVIGATION -->
-                <nav id="navigasi-utama" aria-label="Navigasi Utama" class="hidden md:flex items-center">
-                    <ul class="flex items-center gap-1 lg:gap-2 xl:gap-4 text-sm font-medium text-gray-600">
-                        <li><a href="index.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Beranda</a></li>
-                        <li><a href="catalog.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Katalog Sewa</a></li>
-                        <li><a href="alih-fungsi.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Alih Fungsi Kostum <span class="hidden lg:inline text-xs text-indigo-500 font-semibold">(Nego 0-8%)</span></a></li>
-                        <li><a href="dashboard-rental.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Dashboard Rental</a></li>
-                    </ul>
-                </nav>
-
-                <!-- HEADER ACTIONS & HAMBURGER BUTTON -->
-                <div class="flex items-center gap-2 shrink-0">
-                    <div class="header-auth-actions flex items-center gap-2">
-                        <a href="login.html" aria-current="page" class="px-3 py-1.5 text-xs sm:text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition whitespace-nowrap">Masuk</a>
-                        <a href="register.html" class="hidden sm:inline-block px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-lg transition whitespace-nowrap">Daftar Akun</a>
-                    </div>
-                    <!-- TOMBOL HAMBURGER MOBILE -->
-                    <button type="button" id="mobile-menu-btn" aria-controls="mobile-dropdown-menu" aria-expanded="false" aria-label="Buka navigasi menu" class="md:hidden p-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <svg class="w-6 h-6 icon-hamburger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                        <svg class="w-6 h-6 icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition">
+                    <h1>Chileorent</h1>
+                </a>
+                <p class="hidden md:block text-xs text-gray-500 border-l border-gray-300 pl-3">
+                    Marketplace Sewa & Solusi Alih Fungsi Kostum Cosplay
+                </p>
             </div>
 
-            <!-- MOBILE DROPDOWN MENU (< MD) -->
-            <div id="mobile-dropdown-menu" class="hidden md:hidden pt-3 mt-3 border-t border-gray-100">
-                <nav aria-label="Navigasi Menu Mobile">
-                    <ul class="flex flex-col space-y-1 text-sm font-medium text-gray-700">
-                        <li><a href="index.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Beranda</a></li>
-                        <li><a href="catalog.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Katalog Sewa</a></li>
-                        <li><a href="alih-fungsi.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Alih Fungsi Kostum (Nego 0-8%)</a></li>
-                        <li><a href="dashboard-rental.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Dashboard Rental</a></li>
-                    </ul>
-                </nav>
-                <div class="sm:hidden pt-3 mt-2 border-t border-gray-100 flex items-center gap-2">
-                    <a href="register.html" class="w-full text-center px-3 py-2 text-xs font-semibold text-white bg-gray-800 hover:bg-gray-900 rounded-lg transition">Daftar Akun Baru</a>
-                </div>
+            <nav id="navigasi-utama" aria-label="Navigasi Utama" class="order-3 md:order-2 w-full md:w-auto">
+                <ul class="flex flex-wrap items-center gap-1 md:gap-4 text-sm font-medium text-gray-600">
+                    <li><a href="index.html" class="px-2 py-1 hover:text-indigo-600 transition">Beranda</a></li>
+                    <li><a href="catalog.html" class="px-2 py-1 hover:text-indigo-600 transition">Katalog Sewa</a></li>
+                    <li><a href="alih-fungsi.html" class="px-2 py-1 hover:text-indigo-600 transition">Alih Fungsi Kostum (Nego 0-8%)</a></li>
+                    <li><a href="dashboard-rental.html" class="px-2 py-1 hover:text-indigo-600 transition">Dashboard Rental</a></li>
+                </ul>
+            </nav>
+
+            <div class="flex items-center gap-2 order-2 md:order-3">
+                <a href="login.html" aria-current="page" class="px-3 py-1.5 text-sm font-medium text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition">Masuk</a>
+                <a href="register.html" class="px-3 py-1.5 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-lg transition">Daftar Akun</a>
             </div>
         </div>
     </header>

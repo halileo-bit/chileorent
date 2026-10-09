@@ -10,56 +10,29 @@
 
     <!-- HEADER ADMIN -->
     <header id="header-admin" class="sticky top-0 z-50 bg-slate-950 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div class="flex items-center justify-between gap-2 lg:gap-6">
-                <!-- LOGO & BRAND -->
-                <div class="flex items-center gap-3 shrink-0">
-                    <a href="admin-dashboard.html" class="text-2xl font-bold text-indigo-400 hover:text-indigo-300 transition">
-                        <h1>Chileorent <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30">Admin</span></h1>
-                    </a>
-                    <p class="hidden xl:block text-xs text-slate-400 border-l border-slate-700 pl-3">
-                        Pusat Kendali Verifikasi, Kurasi Alih Fungsi & Escrow Platform
-                    </p>
-                </div>
-
-                <!-- DESKTOP NAVIGATION -->
-                <nav id="navigasi-admin" aria-label="Navigasi Administrator" class="hidden md:flex items-center">
-                    <ul class="flex items-center gap-1 lg:gap-2 xl:gap-4 text-xs font-medium text-slate-300">
-                        <li><a href="#ringkasan" aria-current="page" class="px-2.5 py-1 text-indigo-400 font-bold border-b-2 border-indigo-400 whitespace-nowrap">Ringkasan</a></li>
-                        <li><a href="#antrean-alih-fungsi" class="px-2.5 py-1 hover:text-indigo-400 transition whitespace-nowrap">Antrean Verifikasi Kostum</a></li>
-                        <li><a href="#pengawasan-escrow" class="px-2.5 py-1 hover:text-indigo-400 transition whitespace-nowrap">Pengawasan Escrow</a></li>
-                        <li><a href="#verifikasi-kyc" class="px-2.5 py-1 hover:text-indigo-400 transition whitespace-nowrap">Verifikasi Mitra (KYC)</a></li>
-                        <li><a href="dashboard-rental.html#view-owner-luas" class="px-2.5 py-1 text-amber-400 hover:text-amber-300 transition font-bold whitespace-nowrap">Buka Rental Dashboard &rarr;</a></li>
-                    </ul>
-                </nav>
-
-                <!-- HEADER ACTIONS & HAMBURGER BUTTON -->
-                <div class="flex items-center gap-2 text-xs shrink-0">
-                    <span class="hidden sm:inline-flex bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full font-medium whitespace-nowrap">👑 Administrator</span>
-                    <button type="button" onclick="ChileoDB.logout()" class="px-2.5 py-1.5 font-medium text-slate-300 hover:text-white border border-slate-700 rounded-lg hover:bg-slate-800 transition whitespace-nowrap">Keluar</button>
-                    <!-- TOMBOL HAMBURGER MOBILE ADMIN -->
-                    <button type="button" id="mobile-menu-btn" aria-controls="mobile-dropdown-menu" aria-expanded="false" aria-label="Buka navigasi menu admin" class="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <svg class="w-6 h-6 icon-hamburger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                        <svg class="w-6 h-6 icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="admin-dashboard.html" class="text-2xl font-bold text-indigo-400 hover:text-indigo-300 transition">
+                    <h1>Chileorent <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30">Admin</span></h1>
+                </a>
+                <p class="hidden md:block text-xs text-slate-400 border-l border-slate-700 pl-3">
+                    Pusat Kendali Verifikasi, Kurasi Alih Fungsi & Escrow Platform
+                </p>
             </div>
 
-            <!-- MOBILE DROPDOWN MENU ADMIN (< MD) -->
-            <div id="mobile-dropdown-menu" class="hidden md:hidden pt-3 mt-3 border-t border-slate-800">
-                <nav aria-label="Navigasi Menu Admin Mobile">
-                    <ul class="flex flex-col space-y-1 text-xs font-medium text-slate-300">
-                        <li><a href="#ringkasan" class="block px-3 py-2 rounded-lg bg-indigo-500/20 text-indigo-300 font-semibold border-l-4 border-indigo-400">Ringkasan</a></li>
-                        <li><a href="#antrean-alih-fungsi" class="block px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-indigo-400 transition">Antrean Verifikasi Kostum</a></li>
-                        <li><a href="#pengawasan-escrow" class="block px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-indigo-400 transition">Pengawasan Escrow</a></li>
-                        <li><a href="#verifikasi-kyc" class="block px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-indigo-400 transition">Verifikasi Mitra (KYC)</a></li>
-                        <li><a href="dashboard-rental.html#view-owner-luas" class="block px-3 py-2 rounded-lg text-amber-400 hover:bg-slate-800 transition font-bold">Buka Rental Dashboard &rarr;</a></li>
-                    </ul>
-                </nav>
+            <nav id="navigasi-admin" aria-label="Navigasi Administrator" class="order-3 md:order-2 w-full md:w-auto">
+                <ul class="flex flex-wrap items-center gap-1 md:gap-4 text-xs font-medium text-slate-300">
+                    <li><a href="#ringkasan" aria-current="page" class="px-2 py-1 text-indigo-400 font-bold border-b-2 border-indigo-400">Ringkasan</a></li>
+                    <li><a href="#antrean-alih-fungsi" class="px-2 py-1 hover:text-indigo-400 transition">Antrean Verifikasi Kostum</a></li>
+                    <li><a href="#pengawasan-escrow" class="px-2 py-1 hover:text-indigo-400 transition">Pengawasan Escrow</a></li>
+                    <li><a href="#verifikasi-kyc" class="px-2 py-1 hover:text-indigo-400 transition">Verifikasi Mitra (KYC)</a></li>
+                    <li><a href="dashboard-rental.html#view-owner-luas" class="px-2 py-1 text-amber-400 hover:text-amber-300 transition"><strong>Buka Rental Dashboard &rarr;</strong></a></li>
+                </ul>
+            </nav>
+
+            <div class="flex items-center gap-3 order-2 md:order-3 text-xs">
+                <span class="bg-amber-500/10 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full font-medium">👑 Administrator</span>
+                <button type="button" onclick="ChileoDB.logout()" class="px-3 py-1.5 font-medium text-slate-300 hover:text-white border border-slate-700 rounded-lg hover:bg-slate-800 transition">Keluar</button>
             </div>
         </div>
     </header>
