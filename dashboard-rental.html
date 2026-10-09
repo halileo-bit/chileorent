@@ -10,28 +10,59 @@
 
     <!-- HEADER -->
     <header id="header-utama" class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition">
-                    <h1>Chileorent</h1>
-                </a>
-                <p class="hidden md:block text-xs text-gray-500 border-l border-gray-300 pl-3">
-                    Sistem Manajemen Rental Pintar & Alih Fungsi Kostum
-                </p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between gap-2 lg:gap-6">
+                <!-- LOGO & BRAND -->
+                <div class="flex items-center gap-3 shrink-0">
+                    <a href="index.html" class="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition">
+                        <h1>Chileorent</h1>
+                    </a>
+                    <p class="hidden xl:block text-xs text-gray-500 border-l border-gray-300 pl-3">
+                        Sistem Manajemen Rental Pintar & Alih Fungsi Kostum
+                    </p>
+                </div>
+
+                <!-- DESKTOP NAVIGATION -->
+                <nav id="navigasi-utama" aria-label="Navigasi Utama" class="hidden md:flex items-center">
+                    <ul class="flex items-center gap-1 lg:gap-2 xl:gap-4 text-sm font-medium text-gray-600">
+                        <li><a href="index.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Beranda</a></li>
+                        <li><a href="catalog.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Katalog Sewa</a></li>
+                        <li><a href="alih-fungsi.html" class="px-2.5 py-1 hover:text-indigo-600 transition whitespace-nowrap">Alih Fungsi Kostum <span class="hidden lg:inline text-xs text-indigo-500 font-semibold">(Nego 0-8%)</span></a></li>
+                        <li><a href="dashboard-rental.html" aria-current="page" class="px-2.5 py-1 text-indigo-600 font-semibold border-b-2 border-indigo-600 whitespace-nowrap">Dashboard Rental</a></li>
+                    </ul>
+                </nav>
+
+                <!-- HEADER ACTIONS & HAMBURGER BUTTON -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <div class="header-auth-actions flex items-center gap-2">
+                        <a href="login.html" class="px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition whitespace-nowrap">Masuk</a>
+                        <a href="register.html" class="hidden sm:inline-block px-3 py-1.5 text-xs sm:text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-lg transition whitespace-nowrap">Daftar Akun</a>
+                    </div>
+                    <!-- TOMBOL HAMBURGER MOBILE -->
+                    <button type="button" id="mobile-menu-btn" aria-controls="mobile-dropdown-menu" aria-expanded="false" aria-label="Buka navigasi menu" class="md:hidden p-2 text-gray-600 hover:text-indigo-600 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <svg class="w-6 h-6 icon-hamburger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg class="w-6 h-6 icon-close hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <nav id="navigasi-utama" aria-label="Navigasi Utama" class="order-3 md:order-2 w-full md:w-auto">
-                <ul class="flex flex-wrap items-center gap-1 md:gap-4 text-sm font-medium text-gray-600">
-                    <li><a href="index.html" class="px-2 py-1 hover:text-indigo-600 transition">Beranda</a></li>
-                    <li><a href="catalog.html" class="px-2 py-1 hover:text-indigo-600 transition">Katalog Sewa</a></li>
-                    <li><a href="alih-fungsi.html" class="px-2 py-1 hover:text-indigo-600 transition">Alih Fungsi Kostum (Nego 0-8%)</a></li>
-                    <li><a href="dashboard-rental.html" aria-current="page" class="px-2 py-1 text-indigo-600 font-semibold border-b-2 border-indigo-600">Dashboard Rental</a></li>
-                </ul>
-            </nav>
-
-            <div class="flex items-center gap-2 order-2 md:order-3">
-                <a href="login.html" class="px-3 py-1.5 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition">Masuk</a>
-                <a href="register.html" class="px-3 py-1.5 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-lg transition">Daftar Akun</a>
+            <!-- MOBILE DROPDOWN MENU (< MD) -->
+            <div id="mobile-dropdown-menu" class="hidden md:hidden pt-3 mt-3 border-t border-gray-100">
+                <nav aria-label="Navigasi Menu Mobile">
+                    <ul class="flex flex-col space-y-1 text-sm font-medium text-gray-700">
+                        <li><a href="index.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Beranda</a></li>
+                        <li><a href="catalog.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Katalog Sewa</a></li>
+                        <li><a href="alih-fungsi.html" class="block px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-indigo-600 transition">Alih Fungsi Kostum (Nego 0-8%)</a></li>
+                        <li><a href="dashboard-rental.html" aria-current="page" class="block px-3 py-2 rounded-lg bg-indigo-50 text-indigo-600 font-semibold border-l-4 border-indigo-600">Dashboard Rental</a></li>
+                    </ul>
+                </nav>
+                <div class="sm:hidden pt-3 mt-2 border-t border-gray-100 flex items-center gap-2">
+                    <a href="register.html" class="w-full text-center px-3 py-2 text-xs font-semibold text-white bg-gray-800 hover:bg-gray-900 rounded-lg transition">Daftar Akun Baru</a>
+                </div>
             </div>
         </div>
     </header>
@@ -55,25 +86,24 @@
             <section id="view-guest-notice" class="hidden p-8 bg-white border border-gray-200 rounded-2xl text-center space-y-4 shadow-sm">
                 <span class="text-4xl block">🔐</span>
                 <h2 class="text-xl font-bold text-gray-900">Akses Dashboard Memerlukan Login Akun</h2>
-                <p class="text-xs text-gray-500 max-w-md mx-auto">Silakan masuk ke akun Anda atau daftarkan akun baru sesuai peran Anda (Perental, Penjual Alih Fungsi, atau Pemilik Rental/Admin).</p>
+                <p class="text-xs text-gray-500 max-w-md mx-auto">Silakan masuk ke akun Anda atau daftarkan akun baru sesuai peran Anda (Customer atau Admin).</p>
                 <div class="flex justify-center gap-3 pt-2">
                     <a href="login.html" class="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">Masuk ke Akun &rarr;</a>
                     <a href="register.html" class="px-4 py-2 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 border rounded-lg transition">Daftar Akun Baru</a>
                 </div>
             </section>
 
-            <!-- PERAN 1: FITUR LUAS -->
+            <!-- PERAN 1: FITUR LUAS ADMIN -->
             <section id="view-owner-luas" class="space-y-8" aria-labelledby="owner-view-title">
                 
                 <header class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-4">
                     <div class="space-y-1">
-                        <span class="inline-block px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded-full">👑 Mode Akses Luas: Pemilik Rental Utama & Admin Platform</span>
+                        <span class="inline-block px-2.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded-full">👑 Mode Akses: Admin</span>
                         <h2 id="owner-view-title" class="text-2xl font-bold text-gray-900">Panel Kontrol Operasional: Kurogane Cosplay Hub</h2>
                         <p class="text-xs text-gray-500">Status: <span class="text-emerald-600 font-bold">✓ Mitra Terverifikasi KYC</span> | Rating: ★★★★★ <strong>4.8 / 5.0</strong></p>
                     </div>
                     <div class="flex gap-2">
                         <a href="admin-dashboard.html" class="px-3 py-2 text-xs font-semibold text-white bg-slate-800 hover:bg-slate-900 rounded-lg transition">⚙️ Admin Dashboard Pusat &rarr;</a>
-                        <a href="alih-fungsi.html" class="px-3 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition">+ Tambah Kostum</a>
                     </div>
                 </header>
 
@@ -186,187 +216,146 @@
 
             </section>
 
-            <!-- PERAN 2: FITUR TERBATAS PENJUAL (PEMILIK RENTAL LAMA & COSPLAYER ALIH FUNGSI) -->
-            <section id="view-penjual-terbatas" class="space-y-8 pt-4 border-t-2 border-dashed border-gray-300" aria-labelledby="seller-view-title">
+            <!-- PERAN 2: FITUR CUSTOMER (COSPLAYER & PEMILIK RENTAL LAMA) -->
+            <section id="view-customer" class="space-y-6 hidden" aria-labelledby="customer-view-title">
                 
                 <header class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-4">
                     <div class="space-y-1">
-                        <span class="inline-block px-2.5 py-0.5 text-[10px] font-bold bg-purple-100 text-purple-800 rounded-full">🔄 Mode Akses Terbatas: Penjual (Pemilik Kostum Lama & Cosplayer)</span>
-                        <h2 id="seller-view-title" class="text-2xl font-bold text-gray-900">Panel Penjual & Pemilik Aset: Sakura Wardrobe</h2>
-                        <p class="text-xs text-gray-500">ID Mitra: <span class="font-mono font-bold text-gray-800">#SL-2026-092</span> | Status: <span class="text-emerald-600 font-bold">✓ Terverifikasi KYC (Auto-Identifikasi Form Aktif)</span></p>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="alih-fungsi.html" class="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition">
-                            + Ajukan Alih Fungsi Kostum (Auto-Isi Identitas) &rarr;
-                        </a>
+                        <span class="inline-block px-2.5 py-0.5 text-[10px] font-bold bg-indigo-100 text-indigo-800 rounded-full">🎭 Mode Akses: Customer (Cosplayer / Pemilik Rental Lama)</span>
+                        <h2 id="customer-view-title" class="text-2xl font-bold text-gray-900">Halo, Alisa Putri / Sakura Wardrobe!</h2>
+                        <p class="text-xs text-gray-500">Status Akun: <span class="text-emerald-600 font-bold">✓ Terverifikasi KYC</span> (Bebas Deposit Rp 0 & Auto-Identifikasi Form Alih Fungsi)</p>
                     </div>
                 </header>
 
-                <!-- BANNER PENJUAL INFO -->
-                <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-xs text-indigo-900 space-y-1">
-                    <p class="font-bold">✨ Manfaat Akun Penjual Terdaftar:</p>
-                    <p class="text-gray-600">Akun ini terdaftar khusus untuk memudahkan identifikasi kepemilikan kostum lama saat mengisi alur formulir alih fungsi (Titip Sewa / Akuisisi oleh Chileorent). Anda tidak perlu mengulang proses verifikasi identitas (KTP/rekening) untuk setiap kostum yang diajukan.</p>
+                <!-- SUB-TAB SWITCHER -->
+                <nav class="flex flex-wrap gap-2 border-b border-gray-200 pb-3" aria-label="Customer Subtabs">
+                    <button type="button" id="tab-btn-cust-rent" onclick="switchCustomerSubtab('rent')" class="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white shadow-sm transition">
+                        📦 Sewa Kostum Saya (Pelacakan Resi & Status Rental)
+                    </button>
+                    <button type="button" id="tab-btn-cust-alih" onclick="switchCustomerSubtab('alih')" class="px-4 py-2 text-xs font-bold rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                        🔄 Alih Fungsi Kostum Saya (Kurasi Grade & Nego 0-8%)
+                    </button>
+                </nav>
+
+                <!-- SUBSECTION 1: SEWA KOSTUM SAYA -->
+                <div id="customer-sub-rent" class="space-y-8">
+                    <!-- BANNER PERENTAL INFO -->
+                    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-1">
+                        <p class="font-bold">✨ Manfaat Akun Customer Terdaftar (Fitur Sewa):</p>
+                        <p class="text-gray-600">Akun Anda mempermudah tracking status pengiriman kostum, jadwal pengembalian, status pelunasan DP, serta pengembalian dana deposit (uang jaminan) otomatis melalui Escrow tanpa repot konfirmasi manual.</p>
+                    </div>
+
+                    <!-- METRICS PERENTAL -->
+                    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Kostum Sedang Disewa</h3>
+                            <p class="text-2xl font-bold text-indigo-600 mt-1">1 Kostum</p>
+                            <span class="text-[10px] text-gray-500">Frieren (Size M)</span>
+                        </article>
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Booking DP (Mendatang)</h3>
+                            <p class="text-2xl font-bold text-amber-600 mt-1">1 Booking</p>
+                            <span class="text-[10px] text-gray-500">DP 30% Terbayar</span>
+                        </article>
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Riwayat Sewa Selesai</h3>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">4 Kali</p>
+                            <span class="text-[10px] text-emerald-600">Skor Reputasi: 5.0 ★</span>
+                        </article>
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Uang Jaminan di Escrow</h3>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1">Rp 100.000</p>
+                            <span class="text-[10px] text-emerald-600">Proses refund otomatis</span>
+                        </article>
+                    </section>
+
+                    <!-- TABEL STATUS KOSTUM YANG DIRENTAL -->
+                    <section class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h3 class="font-bold text-gray-900 text-base">Status Kostum yang Sedang / Akan Dirental</h3>
+                            <span class="text-xs text-gray-500">Pantau resi kurir, batas waktu kembali, dan status dana jaminan</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200">
+                                        <th class="p-3">ID Booking</th>
+                                        <th class="p-3">Kostum & Seri</th>
+                                        <th class="p-3">Tanggal Sewa</th>
+                                        <th class="p-3">Skema Bayar</th>
+                                        <th class="p-3">Uang Jaminan</th>
+                                        <th class="p-3">Resi & Pengiriman</th>
+                                        <th class="p-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
                 </div>
 
-                <!-- METRICS PENJUAL -->
-                <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Kostum Dialihfungsikan</h3>
-                        <p class="text-2xl font-bold text-gray-900 mt-1">3 Unit</p>
-                        <span class="text-[10px] text-gray-500">2 Akuisisi Chileorent, 1 Titip Sewa</span>
-                    </article>
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Menunggu Kurasi Fisik</h3>
-                        <p class="text-2xl font-bold text-amber-600 mt-1">1 Pengajuan</p>
-                        <span class="text-[10px] text-gray-500">Proses Grade & Cek Foto</span>
-                    </article>
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Tawaran Nego Masuk (0-8%)</h3>
-                        <p class="text-2xl font-bold text-indigo-600 mt-1">2 Calon Pembeli</p>
-                        <span class="text-[10px] text-gray-500">Toleransi nego terkendali</span>
-                    </article>
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Saldo Rekening Escrow</h3>
-                        <p class="text-2xl font-bold text-emerald-600 mt-1">Rp 1.850.000</p>
-                        <span class="text-[10px] text-emerald-600">Siap dicairkan ke bank</span>
-                    </article>
-                </section>
-
-                <!-- TABEL STATUS KOSTUM ALIH FUNGSI -->
-                <section class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm space-y-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <h3 class="font-bold text-gray-900 text-base">Status Kostum yang Sedang Dialihfungsikan</h3>
-                        <span class="text-xs text-gray-500">Daftar kostum Anda yang sedang dikurasi atau dipasarkan</span>
+                <!-- SUBSECTION 2: ALIH FUNGSI KOSTUM SAYA -->
+                <div id="customer-sub-alih" class="space-y-8 hidden">
+                    <!-- BANNER ALIH FUNGSI INFO -->
+                    <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-xs text-indigo-900 space-y-1">
+                        <p class="font-bold">✨ Manfaat Akun Customer Terdaftar (Fitur Alih Fungsi):</p>
+                        <p class="text-gray-600">Memudahkan identifikasi kepemilikan kostum lama saat mengisi alur formulir alih fungsi (Titip Sewa / Akuisisi oleh Chileorent). Anda tidak perlu mengulang proses verifikasi identitas (KTP/rekening) untuk setiap kostum yang diajukan.</p>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200">
-                                    <th class="p-3">ID Pengajuan</th>
-                                    <th class="p-3">Kostum & Karakter</th>
-                                    <th class="p-3">Skema Dipilih</th>
-                                    <th class="p-3">Harga & Toleransi Nego</th>
-                                    <th class="p-3">Grade Kurasi</th>
-                                    <th class="p-3">Status Listing</th>
-                                    <th class="p-3">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr>
-                                    <td class="p-3 font-mono">#AF-2026-012</td>
-                                    <td class="p-3"><strong>Raiden Shogun (Size S)</strong><br><small class="text-gray-500">Uwowo Fullset + Wig</small></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded font-medium">Akuisisi Chileorent</span></td>
-                                    <td class="p-3">Rp 1.200.000<br><small class="text-indigo-600 font-medium">Nego Maks: 8% (Rp 1.104.000)</small></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold">Grade A (95%)</span></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded">Disetujui Chileorent</span></td>
-                                    <td class="p-3"><a href="alih-fungsi.html#fitur-nego" class="px-2.5 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded border border-indigo-200 font-semibold inline-block">Kelola Nego</a></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-mono">#AF-2026-018</td>
-                                    <td class="p-3"><strong>Kafka Honkai Star Rail (Size M)</strong><br><small class="text-gray-500">Costyle + Sepatu Size 38</small></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-purple-100 text-purple-800 rounded font-medium">Titip Sewa</span></td>
-                                    <td class="p-3">Rp 150.000 / 3 hari<br><small class="text-gray-500">Bagi Hasil 70:30</small></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-bold">Menunggu Kurasi</span></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded">Verifikasi Fisik</span></td>
-                                    <td class="p-3"><span class="text-gray-400 text-xs italic">Menunggu Admin</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                    <!-- METRICS PENJUAL / ALIH FUNGSI -->
+                    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Kostum Dialihfungsikan</h3>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">3 Unit</p>
+                            <span class="text-[10px] text-gray-500">2 Akuisisi Chileorent, 1 Titip Sewa</span>
+                        </article>
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Menunggu Kurasi Fisik</h3>
+                            <p class="text-2xl font-bold text-amber-600 mt-1">1 Pengajuan</p>
+                            <span class="text-[10px] text-gray-500">Proses Grade & Cek Foto</span>
+                        </article>
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Tawaran Nego Masuk (0-8%)</h3>
+                            <p class="text-2xl font-bold text-indigo-600 mt-1">2 Calon Pembeli</p>
+                            <span class="text-[10px] text-gray-500">Toleransi nego terkendali</span>
+                        </article>
+                        <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+                            <h3 class="text-xs text-gray-500">Saldo Rekening Escrow</h3>
+                            <p class="text-2xl font-bold text-emerald-600 mt-1">Rp 1.850.000</p>
+                            <span class="text-[10px] text-emerald-600">Siap dicairkan ke bank</span>
+                        </article>
+                    </section>
 
-            </section>
+                    <!-- TABEL STATUS KOSTUM ALIH FUNGSI -->
+                    <section class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h3 class="font-bold text-gray-900 text-base">Status Kostum yang Sedang Dialihfungsikan</h3>
+                            <span class="text-xs text-gray-500">Daftar kostum Anda yang sedang dikurasi atau dipasarkan</span>
+                        </div>
 
-            <!-- PERAN 3: FITUR TERBATAS PERENTAL (CUSTOMER COSPLAYER) -->
-            <section id="view-perental-terbatas" class="space-y-8 pt-4 border-t-2 border-dashed border-gray-300" aria-labelledby="renter-view-title">
-                
-                <header class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm flex flex-wrap items-center justify-between gap-4">
-                    <div class="space-y-1">
-                        <span class="inline-block px-2.5 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-800 rounded-full">🎭 Mode Akses Terbatas: Perental (Customer Cosplayer)</span>
-                        <h2 id="renter-view-title" class="text-2xl font-bold text-gray-900">Halo, Alisa Putri!</h2>
-                        <p class="text-xs text-gray-500">Status Akun: <span class="text-emerald-600 font-bold">✓ Perental Terverifikasi (Bebas Uang Jaminan / Deposit Rp 0 pada order berikutnya)</span></p>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="catalog.html" class="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition">
-                            🔍 Jelajahi Katalog Kostum & Sewa Lagi &rarr;
-                        </a>
-                    </div>
-                </header>
-
-                <!-- BANNER PERENTAL INFO -->
-                <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-900 space-y-1">
-                    <p class="font-bold">✨ Manfaat Akun Perental Terdaftar:</p>
-                    <p class="text-gray-600">Akun perental Anda mempermudah tracking status pengiriman kostum, jadwal pengembalian, status pelunasan DP, serta pengembalian dana deposit (uang jaminan) otomatis melalui Escrow tanpa repot konfirmasi manual.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200">
+                                        <th class="p-3">ID Pengajuan</th>
+                                        <th class="p-3">Kostum & Karakter</th>
+                                        <th class="p-3">Skema Dipilih</th>
+                                        <th class="p-3">Harga & Toleransi Nego</th>
+                                        <th class="p-3">Grade Kurasi</th>
+                                        <th class="p-3">Status Listing</th>
+                                        <th class="p-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
                 </div>
-
-                <!-- METRICS PERENTAL -->
-                <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Kostum Sedang Disewa</h3>
-                        <p class="text-2xl font-bold text-indigo-600 mt-1">1 Kostum</p>
-                        <span class="text-[10px] text-gray-500">Frieren (Size M)</span>
-                    </article>
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Booking DP (Mendatang)</h3>
-                        <p class="text-2xl font-bold text-amber-600 mt-1">1 Booking</p>
-                        <span class="text-[10px] text-gray-500">DP 30% Terbayar</span>
-                    </article>
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Riwayat Sewa Selesai</h3>
-                        <p class="text-2xl font-bold text-gray-900 mt-1">4 Kali</p>
-                        <span class="text-[10px] text-emerald-600">Skor Reputasi: 5.0 ★</span>
-                    </article>
-                    <article class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-                        <h3 class="text-xs text-gray-500">Uang Jaminan di Escrow</h3>
-                        <p class="text-2xl font-bold text-emerald-600 mt-1">Rp 100.000</p>
-                        <span class="text-[10px] text-emerald-600">Proses refund otomatis</span>
-                    </article>
-                </section>
-
-                <!-- TABEL STATUS KOSTUM YANG DIRENTAL -->
-                <section class="bg-white p-6 border border-gray-200 rounded-2xl shadow-sm space-y-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <h3 class="font-bold text-gray-900 text-base">Status Kostum yang Sedang / Akan Dirental</h3>
-                        <span class="text-xs text-gray-500">Pantau resi kurir, batas waktu kembali, dan status dana jaminan</span>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-700 font-bold border-b border-gray-200">
-                                    <th class="p-3">ID Booking</th>
-                                    <th class="p-3">Kostum & Seri</th>
-                                    <th class="p-3">Tanggal Sewa</th>
-                                    <th class="p-3">Skema Bayar</th>
-                                    <th class="p-3">Uang Jaminan</th>
-                                    <th class="p-3">Resi & Pengiriman</th>
-                                    <th class="p-3">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr>
-                                    <td class="p-3 font-mono">#BK-2026-081</td>
-                                    <td class="p-3"><strong>Frieren (Size M)</strong><br><small class="text-gray-500">Kurogane Rental (Bandung)</small></td>
-                                    <td class="p-3">24 - 27 Sep 2026<br><small class="text-amber-600 font-semibold">Kembali besok pk 18:00</small></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-medium">Lunas 100%</span></td>
-                                    <td class="p-3">Rp 100.000<br><small class="text-emerald-600 font-medium">Refund saat barang balik</small></td>
-                                    <td class="p-3">JNE Express<br><strong class="font-mono text-indigo-600">JNE-882910481</strong></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-bold">Sedang Dipakai</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-mono">#BK-2026-094</td>
-                                    <td class="p-3"><strong>Hu Tao (Size S)</strong><br><small class="text-gray-500">Sakura Cosplay (Jakarta)</small></td>
-                                    <td class="p-3">10 - 12 Okt 2026<br><small class="text-gray-500">Event Comifuro</small></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-amber-100 text-amber-800 rounded font-medium">DP 30% Terbayar</span><br><small class="text-gray-500">Sisa Rp 98.000 H-2</small></td>
-                                    <td class="p-3"><strong class="text-emerald-700">Rp 0 (Bebas Deposit)</strong><br><small class="text-gray-500">Perental Terverifikasi</small></td>
-                                    <td class="p-3"><span class="text-gray-400 italic">Resi diterbitkan H-1</span></td>
-                                    <td class="p-3"><span class="px-2 py-0.5 bg-purple-100 text-purple-800 rounded font-bold">Booking Terkunci</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
 
             </section>
 
@@ -404,8 +393,35 @@
     <!-- SCRIPT ENGINE & DASHBOARD RENTAL CONTROLLER -->
     <script src="app.js"></script>
     <script>
+        function switchCustomerSubtab(sub) {
+            const rentSub = document.getElementById('customer-sub-rent');
+            const alihSub = document.getElementById('customer-sub-alih');
+            const btnRent = document.getElementById('tab-btn-cust-rent');
+            const btnAlih = document.getElementById('tab-btn-cust-alih');
+
+            if (sub === 'alih') {
+                if (rentSub) rentSub.classList.add('hidden');
+                if (alihSub) alihSub.classList.remove('hidden');
+                if (btnRent) {
+                    btnRent.className = 'px-4 py-2 text-xs font-bold rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition';
+                }
+                if (btnAlih) {
+                    btnAlih.className = 'px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white shadow-sm transition';
+                }
+            } else {
+                if (rentSub) rentSub.classList.remove('hidden');
+                if (alihSub) alihSub.classList.add('hidden');
+                if (btnRent) {
+                    btnRent.className = 'px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white shadow-sm transition';
+                }
+                if (btnAlih) {
+                    btnAlih.className = 'px-4 py-2 text-xs font-bold rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 transition';
+                }
+            }
+        }
+
         function setRoleTab(tabId) {
-            const sections = ['view-owner-luas', 'view-penjual-terbatas', 'view-perental-terbatas', 'view-guest-notice'];
+            const sections = ['view-owner-luas', 'view-customer', 'view-guest-notice'];
             sections.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
@@ -417,14 +433,31 @@
                 }
             });
 
+            const breadcrumbNav = document.querySelector('.breadcrumb-nav');
+            const adminHideNavItems = document.querySelectorAll('#navigasi-utama a[href*="index.html"], #navigasi-utama a[href*="catalog.html"], #navigasi-utama a[href*="alih-fungsi.html"]');
+
+            if (tabId === 'view-owner-luas') {
+                // Sembunyikan breadcrumb path dan menu publik untuk admin
+                if (breadcrumbNav) breadcrumbNav.classList.add('hidden');
+                adminHideNavItems.forEach(el => {
+                    const li = el.closest('li');
+                    if (li) li.classList.add('hidden');
+                });
+            } else {
+                // Tampilkan kembali semua 4 menu dan breadcrumb untuk customer
+                if (breadcrumbNav) breadcrumbNav.classList.remove('hidden');
+                adminHideNavItems.forEach(el => {
+                    const li = el.closest('li');
+                    if (li) li.classList.remove('hidden');
+                });
+            }
+
             const breadcrumbEl = document.getElementById('breadcrumb-dashboard-title');
             if (breadcrumbEl) {
-                if (tabId === 'view-perental-terbatas') {
-                    breadcrumbEl.textContent = 'Dashboard Perental - Pelacakan Sewa & Resi';
-                } else if (tabId === 'view-penjual-terbatas') {
-                    breadcrumbEl.textContent = 'Dashboard Penjual - Pemantauan Alih Fungsi Kostum';
+                if (tabId === 'view-customer') {
+                    breadcrumbEl.textContent = 'Dashboard Customer - Pelacakan Sewa & Alih Fungsi Kostum';
                 } else if (tabId === 'view-owner-luas') {
-                    breadcrumbEl.textContent = 'Dashboard Pengelola - Manajemen Operasional Rental';
+                    breadcrumbEl.textContent = 'Dashboard Admin - Manajemen Operasional Rental';
                 } else {
                     breadcrumbEl.textContent = 'Dashboard Rental';
                 }
@@ -473,7 +506,7 @@
 
         function renderSellerTable() {
             const list = ChileoDB.getRepurposing();
-            const sellerTbody = document.querySelector('#view-penjual-terbatas tbody');
+            const sellerTbody = document.querySelector('#customer-sub-alih tbody, #view-penjual-terbatas tbody');
             if (sellerTbody) {
                 sellerTbody.innerHTML = list.map(item => `
                     <tr>
@@ -493,7 +526,7 @@
 
         function renderRenterTable() {
             const list = ChileoDB.getRentals();
-            const renterTbody = document.querySelector('#view-perental-terbatas tbody');
+            const renterTbody = document.querySelector('#customer-sub-rent tbody, #view-perental-terbatas tbody');
             if (renterTbody) {
                 renterTbody.innerHTML = list.map(r => `
                     <tr>
@@ -520,7 +553,7 @@
                     localStorage.setItem('chileorent_rentals', JSON.stringify(rentals));
                     renderOwnerTables();
                     renderRenterTable();
-                    alert('✓ Nomor resi ' + resi + ' berhasil disimpan dan disinkronkan ke Dashboard Perental!');
+                    alert('✓ Nomor resi ' + resi + ' berhasil disimpan dan disinkronkan ke Dashboard Customer!');
                 }
             }
         }
@@ -577,14 +610,22 @@
             const params = new URLSearchParams(window.location.search);
             const role = params.get('role');
 
-            if (hash && document.getElementById(hash)) {
-                setRoleTab(hash);
-            } else if (role === 'seller' || session.role === 'seller') {
-                setRoleTab('view-penjual-terbatas');
-            } else if (role === 'renter' || session.role === 'renter') {
-                setRoleTab('view-perental-terbatas');
-            } else if (role === 'owner_admin' || session.role === 'owner_admin') {
+            if (hash === 'view-owner-luas') {
                 setRoleTab('view-owner-luas');
+            } else if (hash === 'view-penjual-terbatas' || hash === 'view-alih-fungsi') {
+                setRoleTab('view-customer');
+                switchCustomerSubtab('alih');
+            } else if (hash === 'view-perental-terbatas' || hash === 'view-customer') {
+                setRoleTab('view-customer');
+                switchCustomerSubtab('rent');
+            } else if (role === 'admin' || role === 'owner_admin' || session.role === 'admin' || session.role === 'owner_admin') {
+                setRoleTab('view-owner-luas');
+            } else if (role === 'customer' || session.role === 'customer' || role === 'renter' || session.role === 'renter' || role === 'seller' || session.role === 'seller') {
+                setRoleTab('view-customer');
+                if (session.name) {
+                    const custTitle = document.getElementById('customer-view-title');
+                    if (custTitle) custTitle.textContent = 'Halo, ' + session.name + '!';
+                }
             } else {
                 setRoleTab('view-guest-notice');
             }

@@ -343,6 +343,107 @@ const ChileoDB = {
     }
 };
 
+// =========================================================================
+// PERTEMUAN 4: TASK 01 - CONNECT TO API (FETCH API & REST DATA INTEGRATION)
+// Sesuai alur materi: Web Page -> JavaScript -> Fetch API -> REST API -> JSON
+// =========================================================================
+const ChileoAPI = {
+    ENDPOINT: 'data/costumes.json',
+    ALT_ENDPOINT: 'api/costumes.json',
+    lastResponse: null,
+    lastFetchedAt: null,
+
+    /**
+     * Mengambil data kostum dari REST API endpoint menggunakan Fetch API
+     * Menggunakan Promise .then() sesuai persis dengan sintaks materi kuliah Pertemuan 4
+     * 
+     * fetch('data/costumes.json')
+     *   .then(res => res.json())
+     *   .then(data => { // proses data })
+     */
+    fetchCostumes: function(onSuccess, onError) {
+        const startTime = performance.now();
+        console.log(`[ChileoAPI] Mengirim GET request ke: ${this.ENDPOINT}`);
+
+        return fetch(this.ENDPOINT)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP Error: Status ${res.status} (${res.statusText})`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                const duration = Math.round(performance.now() - startTime);
+                console.log(`[ChileoAPI] REST API berhasil merespons dalam ${duration}ms:`, data);
+                
+                // Normalisasi dwibahasa: mendukung struktur bahasa Indonesia sesuai slide maupun camelCase
+                const normalized = data.map(item => ({
+                    ...item,
+                    title: item.title || item.judul,
+                    character: item.character || item.karakter,
+                    series: item.series || item.seri,
+                    category: item.category || item.kategori,
+                    size: item.size || item.ukuran,
+                    price: item.price || item.harga,
+                    includes: item.includes || item.kelengkapan || [],
+                    image: item.image || item.gambar,
+                    description: item.description || item.deskripsi,
+                    owner: item.owner || item.pemilik,
+                    rentCount: item.rentCount || item.jumlah_sewa || 0
+                }));
+
+                ChileoAPI.lastResponse = normalized;
+                ChileoAPI.lastFetchedAt = new Date();
+
+                // Sinkronkan ke local storage agar kompatibel dengan modul transaksi lainnya
+                localStorage.setItem(STORAGE_KEYS.COSTUMES, JSON.stringify(normalized));
+
+                if (typeof onSuccess === 'function') {
+                    onSuccess(normalized, {
+                        source: 'REST API (Fetch)',
+                        endpoint: this.ENDPOINT,
+                        duration: duration,
+                        timestamp: ChileoAPI.lastFetchedAt,
+                        status: 200,
+                        count: normalized.length
+                    });
+                }
+                return normalized;
+            })
+            .catch(err => {
+                console.warn('[ChileoAPI] Fetch API dialihkan ke fallback lokal (misal jika dibuka langsung lewat file:// browser tanpa web server):', err);
+                const cachedData = ChileoDB.getCostumes();
+                
+                if (typeof onError === 'function') {
+                    onError(cachedData, {
+                        source: 'LocalStorage Fallback (CORS/Offline)',
+                        error: err.message,
+                        endpoint: this.ENDPOINT,
+                        count: cachedData.length
+                    });
+                } else if (typeof onSuccess === 'function') {
+                    onSuccess(cachedData, {
+                        source: 'LocalStorage Fallback',
+                        error: err.message,
+                        endpoint: this.ENDPOINT,
+                        count: cachedData.length
+                    });
+                }
+                return cachedData;
+            });
+    },
+
+    /**
+     * Mengambil detail kostum tunggal berdasarkan ID via API
+     */
+    getCostumeById: function(id, callback) {
+        return this.fetchCostumes(data => {
+            const costume = data.find(c => String(c.id) === String(id)) || data[0];
+            if (typeof callback === 'function') callback(costume);
+        });
+    }
+};
+
 // UI SYNCHRONIZER: MENYESUAIKAN NAVBAR SESUAI TIPE PERAN PENDAFTAR / LOGIN
 const ChileoUI = {
     syncNavbar: function() {
@@ -361,15 +462,11 @@ const ChileoUI = {
                 text === 'Dashboard Penjual' || 
                 text === 'Dashboard Pengelola') {
                 
-                if (role === 'renter') {
-                    link.textContent = 'Dashboard Perental';
-                    link.setAttribute('href', 'dashboard-rental.html#view-perental-terbatas');
-                    link.setAttribute('title', 'Dashboard Khusus Perental (Lacak Sewa & Resi)');
-                } else if (role === 'seller') {
-                    link.textContent = 'Dashboard Penjual';
-                    link.setAttribute('href', 'dashboard-rental.html#view-penjual-terbatas');
-                    link.setAttribute('title', 'Dashboard Khusus Penjual (Alih Fungsi & Grade)');
-                } else if (role === 'owner_admin') {
+                if (role === 'customer' || role === 'renter' || role === 'seller') {
+                    link.textContent = 'Dashboard Customer';
+                    link.setAttribute('href', 'dashboard-rental.html');
+                    link.setAttribute('title', 'Dashboard Customer (Lacak Sewa, Resi & Alih Fungsi Kostum)');
+                } else if (role === 'admin' || role === 'owner_admin') {
                     link.textContent = 'Dashboard Pengelola';
                     link.setAttribute('href', 'dashboard-rental.html#view-owner-luas');
                     link.setAttribute('title', 'Dashboard Pemilik Usaha Rental & Admin');
@@ -380,8 +477,49 @@ const ChileoUI = {
             }
         });
 
+        // Sembunyikan navigasi publik (Beranda, Katalog, Alih Fungsi) dan breadcrumb jika login sebagai admin
+        if (role === 'admin' || role === 'owner_admin') {
+            const adminHiddenNavs = document.querySelectorAll('header nav a[href*="index.html"], header nav a[href*="catalog.html"], header nav a[href*="alih-fungsi.html"]');
+            adminHiddenNavs.forEach(link => {
+                const li = link.closest('li');
+                if (li) li.style.display = 'none';
+                else link.style.display = 'none';
+            });
+
+            // Sembunyikan breadcrumb path jika admin
+            const breadcrumbNavs = document.querySelectorAll('.breadcrumb-nav');
+            breadcrumbNavs.forEach(b => {
+                b.style.display = 'none';
+            });
+
+            // Arahkan logo brand Chileorent ke dashboard admin
+            const logoLink = document.querySelector('header a[href*="index.html"]');
+            if (logoLink) {
+                logoLink.setAttribute('href', 'dashboard-rental.html#view-owner-luas');
+            }
+        } else {
+            // Tampilkan kembali semua menu (4 menu) dan breadcrumb untuk customer atau tamu
+            const navItems = document.querySelectorAll('header nav a[href*="index.html"], header nav a[href*="catalog.html"], header nav a[href*="alih-fungsi.html"]');
+            navItems.forEach(link => {
+                const li = link.closest('li');
+                if (li) li.style.display = '';
+                else link.style.display = '';
+            });
+
+            const breadcrumbNavs = document.querySelectorAll('.breadcrumb-nav');
+            breadcrumbNavs.forEach(b => {
+                b.style.display = '';
+            });
+
+            const logoLink = document.querySelector('header a[href*="dashboard-rental.html#view-owner-luas"]');
+            if (logoLink) {
+                logoLink.setAttribute('href', 'index.html');
+            }
+        }
+
         // 2. Sinkronkan tombol Auth Header (Masuk & Daftar Akun -> User Badge & Keluar)
-        const headerActions = document.querySelector('header .flex.items-center.gap-2.order-2') ||
+        const headerActions = document.querySelector('.header-auth-actions') ||
+                              document.querySelector('header .flex.items-center.gap-2.order-2') ||
                               document.querySelector('header .flex.items-center.gap-2:not(#navigasi-utama)');
 
         if (headerActions) {
@@ -389,13 +527,10 @@ const ChileoUI = {
             const registerLink = headerActions.querySelector('a[href*="register.html"]');
 
             if (role && role !== 'guest' && session.name) {
-                let roleLabel = 'Perental';
+                let roleLabel = 'Customer';
                 let roleColor = 'bg-emerald-50 text-emerald-800 border-emerald-300';
-                if (role === 'seller') {
-                    roleLabel = 'Penjual';
-                    roleColor = 'bg-purple-50 text-purple-800 border-purple-300';
-                } else if (role === 'owner_admin') {
-                    roleLabel = 'Admin/Owner';
+                if (role === 'admin' || role === 'owner_admin') {
+                    roleLabel = 'Admin';
                     roleColor = 'bg-amber-50 text-amber-800 border-amber-300';
                 }
 
@@ -409,18 +544,12 @@ const ChileoUI = {
                     headerActions.insertBefore(userBox, headerActions.firstChild);
                 }
 
-                let adminShortcut = '';
-                if (role === 'owner_admin') {
-                    adminShortcut = `<a href="admin-dashboard.html" class="px-2.5 py-1.5 text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg transition">⚙️ Admin Pusat</a>`;
-                }
-
                 userBox.innerHTML = `
                     <span class="px-2.5 py-1 text-xs font-medium border rounded-lg ${roleColor} flex items-center gap-1.5 shadow-sm">
                         <span>👤</span>
                         <strong class="max-w-[120px] truncate sm:max-w-none">${session.name}</strong>
                         <span class="text-[10px] font-bold uppercase opacity-75">(${roleLabel})</span>
                     </span>
-                    ${adminShortcut}
                     <button type="button" onclick="ChileoDB.logout()" class="px-2.5 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition">
                         Keluar
                     </button>
@@ -432,6 +561,66 @@ const ChileoUI = {
                 if (userBox) userBox.remove();
             }
         }
+    },
+
+    /**
+     * Inisialisasi Tombol Hamburger & Dropdown Menu Navigasi Mobile
+     */
+    initMobileMenu: function() {
+        const toggleBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-dropdown-menu');
+        if (!toggleBtn || !mobileMenu) return;
+
+        if (toggleBtn.dataset.listenerAttached === 'true') return;
+        toggleBtn.dataset.listenerAttached = 'true';
+
+        const hamburgerIcon = toggleBtn.querySelector('.icon-hamburger');
+        const closeIcon = toggleBtn.querySelector('.icon-close');
+
+        function toggleMenu(forceClose) {
+            const isCurrentlyOpen = !mobileMenu.classList.contains('hidden');
+            const shouldOpen = forceClose === true ? false : (forceClose === false ? true : !isCurrentlyOpen);
+
+            if (shouldOpen) {
+                mobileMenu.classList.remove('hidden');
+                toggleBtn.setAttribute('aria-expanded', 'true');
+                if (hamburgerIcon) hamburgerIcon.classList.add('hidden');
+                if (closeIcon) closeIcon.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                if (hamburgerIcon) hamburgerIcon.classList.remove('hidden');
+                if (closeIcon) closeIcon.classList.add('hidden');
+            }
+        }
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        // Tutup otomatis saat link di dalam mobile menu diklik
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu(true);
+            });
+        });
+
+        // Tutup saat klik di luar area menu
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.classList.contains('hidden')) {
+                if (!mobileMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
+                    toggleMenu(true);
+                }
+            }
+        });
+
+        // Tutup dengan tombol Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                toggleMenu(true);
+            }
+        });
     }
 };
 
@@ -441,9 +630,11 @@ initChileorentData();
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         ChileoUI.syncNavbar();
+        ChileoUI.initMobileMenu();
     });
 } else {
     ChileoUI.syncNavbar();
+    ChileoUI.initMobileMenu();
 }
 
 // HELPER: Format Rupiah

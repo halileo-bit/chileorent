@@ -21,14 +21,19 @@ Chileorent adalah platform web yang menghubungkan cosplayer yang ingin merental 
 
 ```text
 Chileorent/
-├── index.html            # Beranda Utama (Hero, 6 Pilar, Highlight Katalog, Escrow, FAQ)
-├── catalog.html          # Katalog Marketplace Sewa (Sidebar Filter & Grid Produk)
-├── detail-kostum.html    # Detail Sewa Kostum, Form Booking, Fitur DP (30%/50%), Deposit Opsional
-├── alih-fungsi.html      # Alur Alih Fungsi, Slider Nego 0-8%, Kalkulator Aman & Simulasi Penawaran
-├── dashboard-rental.html # Dasbor Multi-Peran (Pengelola Luas, Penjual Terbatas, Perental Terbatas)
+├── data/
+│   └── costumes.json     # Endpoint REST API Data Kostum Cosplay (JSON)
+├── api/
+│   └── costumes.json     # Endpoint Alias REST API
+├── index.html            # Beranda Utama (Hero, Highlight Katalog API, Escrow, FAQ)
+├── catalog.html          # Katalog Marketplace Sewa (Live Fetch API, Filter & Inspector)
+├── detail-kostum.html    # Detail Sewa Kostum (Sinkronisasi Data API & Form Booking)
+├── alih-fungsi.html      # Alur Alih Fungsi, Slider Nego 0-8%, Kalkulator Aman & Simulasi
+├── dashboard-rental.html # Dasbor Multi-Peran (Pengelola Luas, Penjual, Perental)
 ├── login.html            # Portal Masuk Pengelola & Member Komunitas
-├── register.html         # Pendaftaran Akun Sesuai Peran (Perental, Penjual, Mitra Rental)
-├── admin-dashboard.html  # Panel Kontrol Admin (Kurasi Grade A/B/C, Audit Escrow, Verifikasi KYC)
+├── register.html         # Pendaftaran Akun Sesuai Peran
+├── admin-dashboard.html  # Panel Kontrol Admin (Kurasi Grade A/B/C, Audit Escrow)
+├── app.js                # Engine Utama & Modul ChileoAPI (Fetch API Integration)
 ├── style.css             # Seluruh Aturan Styling CSS & Desain Sistem Responsif
 ├── .gitignore            # Konfigurasi file yang diabaikan Git
 └── README.md             # Dokumentasi Proyek
@@ -50,3 +55,34 @@ Buka browser dan akses: `http://localhost:8000`
 
 ### Cara 3: Menggunakan Live Server (VS Code)
 Klik kanan pada `index.html` di VS Code, lalu pilih **"Open with Live Server"**.
+
+---
+
+## ⚡ Pertemuan 4: Task 01 - Connect to API
+
+Mengimplementasikan integrasi REST API menggunakan **JavaScript Fetch API** sesuai diagram alur kuliah:
+
+```
+[ WEB PAGE ] ──► [ JAVASCRIPT ] ──► [ FETCH API ] ──► [ REST API ] ──► [ JSON RESPONSE ]
+(Halaman Web)     (app.js Engine)     (GET Endpoint)    (costumes.json)    (Array of Objects)
+```
+
+1. **Web Page**: Halaman web Chileorent (`index.html`, `catalog.html`, `detail-kostum.html`) diakses pengguna.
+2. **JavaScript**: Modul `ChileoAPI` pada `app.js` mengeksekusi request HTTP asynchronous.
+3. **Fetch API**: Mengirim `GET` request ke endpoint `data/costumes.json`.
+   ```javascript
+   fetch('data/costumes.json')
+       .then(res => {
+           if (!res.ok) throw new Error('HTTP error ' + res.status);
+           return res.json();
+       })
+       .then(data => {
+           // proses data dan render kartu kostum ke katalog
+       })
+       .catch(err => {
+           console.error('Fetch error:', err);
+       });
+   ```
+4. **REST API Endpoint**: `data/costumes.json` (dan alias `api/costumes.json`) menyediakan resource data kostum cosplay lengkap.
+5. **JSON Data**: Data diterima dalam format JSON standar (memuat atribut `id`, `judul`/`title`, `deskripsi`/`description`, `kategori`/`category`, `harga`/`price`, `tanggal`, dll) dan langsung di-render ke antarmuka pengguna.
+6. **API Inspector & Modal**: Di halaman `catalog.html`, disediakan banner status koneksi, tombol **"🔄 Uji Fetch API"**, dan tombol **"{ ; } Response JSON"** untuk memeriksa status HTTP, latency, dan payload data mentah secara interaktif.
