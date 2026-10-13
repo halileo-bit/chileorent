@@ -219,14 +219,11 @@
                 </div>
 
                 <!-- PAGINATION -->
-                <nav class="flex justify-center pt-6" aria-label="Navigasi Halaman Katalog">
-                    <ul class="flex items-center space-x-1 text-sm font-semibold">
-                        <li><a href="#prev" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed" aria-disabled="true">&laquo; Sebelum</a></li>
-                        <li><a href="#page-1" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg" aria-current="page">1</a></li>
-                        <li><a href="#page-2" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">2</a></li>
-                        <li><a href="#page-3" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">3</a></li>
-                        <li><a href="#page-4" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">4</a></li>
-                        <li><a href="#next" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">Lanjut &raquo;</a></li>
+                <nav id="catalog-pagination-nav" class="flex justify-center pt-6" aria-label="Navigasi Halaman Katalog">
+                    <ul id="catalog-pagination-list" class="flex items-center space-x-1 text-sm font-semibold">
+                        <li><button type="button" disabled class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed select-none" aria-disabled="true">&laquo; Sebelum</button></li>
+                        <li><button type="button" aria-current="page" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold shadow-sm">1</button></li>
+                        <li><button type="button" disabled class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed select-none" aria-disabled="true">Lanjut &raquo;</button></li>
                     </ul>
                 </nav>
 
@@ -404,7 +401,62 @@
             );
         }
 
-        function renderCatalogItems() {
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 6;
+
+        function setPage(page) {
+            currentPage = page;
+            renderCatalogItems(false);
+            const catalogSec = document.getElementById('catalog-header-title');
+            if (catalogSec) {
+                catalogSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function renderPagination(totalPages, current) {
+            const nav = document.getElementById('catalog-pagination-nav');
+            const list = document.getElementById('catalog-pagination-list');
+            if (!nav || !list) return;
+
+            if (totalPages <= 0) {
+                nav.classList.add('hidden');
+                return;
+            }
+            nav.classList.remove('hidden');
+
+            let html = '';
+
+            // Tombol "Sebelum"
+            if (current > 1) {
+                html += `<li><button type="button" onclick="setPage(${current - 1})" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition cursor-pointer">&laquo; Sebelum</button></li>`;
+            } else {
+                html += `<li><button type="button" disabled class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed select-none" aria-disabled="true">&laquo; Sebelum</button></li>`;
+            }
+
+            // Nomor Halaman: jika list sedikit (totalPages === 1) hanya tampil 1, jika banyak maka dibagi sesuai data
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === current) {
+                    html += `<li><button type="button" aria-current="page" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-semibold shadow-sm select-none">${i}</button></li>`;
+                } else {
+                    html += `<li><button type="button" onclick="setPage(${i})" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition font-semibold cursor-pointer">${i}</button></li>`;
+                }
+            }
+
+            // Tombol "Lanjut"
+            if (current < totalPages) {
+                html += `<li><button type="button" onclick="setPage(${current + 1})" class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition cursor-pointer">Lanjut &raquo;</button></li>`;
+            } else {
+                html += `<li><button type="button" disabled class="px-3 py-1.5 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed select-none" aria-disabled="true">Lanjut &raquo;</button></li>`;
+            }
+
+            list.innerHTML = html;
+        }
+
+        function renderCatalogItems(resetPage = false) {
+            if (resetPage) {
+                currentPage = 1;
+            }
+
             const costumes = allCostumesData.length > 0 ? allCostumesData : ChileoDB.getCostumes();
             const grid = document.getElementById('catalog-grid');
             const empty = document.getElementById('catalog-empty-state');
@@ -457,12 +509,25 @@
             if (filtered.length === 0) {
                 grid.innerHTML = '';
                 if (empty) empty.classList.remove('hidden');
+                renderPagination(0, 1);
+                const counter = document.querySelector('#catalog-header-title + p');
+                if (counter) {
+                    counter.innerHTML = `Menampilkan <strong>0 dari ${costumes.length}</strong> kostum terverifikasi dengan jaminan escrow otomatis.`;
+                }
                 return;
             }
 
             if (empty) empty.classList.add('hidden');
 
-            grid.innerHTML = filtered.map(c => `
+            const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pagedItems = filtered.slice(startIndex, endIndex);
+
+            grid.innerHTML = pagedItems.map(c => `
                 <article class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
                     <div>
                         <div class="relative h-56 bg-gray-100 overflow-hidden">
@@ -501,25 +566,31 @@
                 </article>
             `).join('');
 
+            renderPagination(totalPages, currentPage);
+
             const counter = document.querySelector('#catalog-header-title + p');
             if (counter) {
-                counter.innerHTML = `Menampilkan <strong>${filtered.length} dari ${costumes.length}</strong> kostum terverifikasi dengan jaminan escrow otomatis.`;
+                if (totalPages > 1) {
+                    counter.innerHTML = `Menampilkan <strong>${startIndex + 1}&ndash;${Math.min(endIndex, filtered.length)} dari ${filtered.length}</strong> kostum terverifikasi (Halaman ${currentPage} dari ${totalPages}) dengan jaminan escrow otomatis.`;
+                } else {
+                    counter.innerHTML = `Menampilkan <strong>${filtered.length} dari ${costumes.length}</strong> kostum terverifikasi dengan jaminan escrow otomatis.`;
+                }
             }
         }
 
         function resetAllFilters() {
             document.getElementById('form-filter-katalog')?.reset();
-            renderCatalogItems();
+            renderCatalogItems(true);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             loadCostumesFromAPI();
-            document.getElementById('form-filter-katalog')?.addEventListener('input', renderCatalogItems);
+            document.getElementById('form-filter-katalog')?.addEventListener('input', () => renderCatalogItems(true));
             document.getElementById('form-filter-katalog')?.addEventListener('submit', (e) => {
                 e.preventDefault();
-                renderCatalogItems();
+                renderCatalogItems(true);
             });
-            document.getElementById('sort-select')?.addEventListener('change', renderCatalogItems);
+            document.getElementById('sort-select')?.addEventListener('change', () => renderCatalogItems(true));
         });
     </script>
 </body>
