@@ -416,22 +416,26 @@ const ChileoUI = {
             }
         }
 
-        // 2. Sinkronkan tombol Auth Header (Masuk & Daftar Akun -> User Badge & Keluar)
-        const headerActions = document.querySelector('header .flex.items-center.gap-2.order-2') ||
+        // 2. Sinkronkan tombol Auth Header Desktop & Mobile Dropdown
+        const headerActions = document.getElementById('desktop-auth-actions') || 
+                              document.querySelector('header .flex.items-center.gap-2.order-2') ||
                               document.querySelector('header .flex.items-center.gap-2:not(#navigasi-utama)');
 
-        if (headerActions) {
-            const loginLink = headerActions.querySelector('a[href*="login.html"]');
-            const registerLink = headerActions.querySelector('a[href*="register.html"]');
+        const mobileCompactBadge = document.getElementById('mobile-compact-badge');
+        const mobileAuthActions = document.getElementById('mobile-auth-actions');
 
-            if (role && role !== 'guest' && session.name) {
-                let roleLabel = 'Customer';
-                let roleColor = 'bg-emerald-50 text-emerald-800 border-emerald-300';
-                if (role === 'admin' || role === 'owner_admin') {
-                    roleLabel = 'Admin';
-                    roleColor = 'bg-amber-50 text-amber-800 border-amber-300';
-                }
+        if (role && role !== 'guest' && session.name) {
+            let roleLabel = 'Customer';
+            let roleColor = 'bg-emerald-50 text-emerald-800 border-emerald-300';
+            if (role === 'admin' || role === 'owner_admin') {
+                roleLabel = 'Admin';
+                roleColor = 'bg-amber-50 text-amber-800 border-amber-300';
+            }
 
+            // Desktop Auth
+            if (headerActions) {
+                const loginLink = headerActions.querySelector('a[href*="login.html"]');
+                const registerLink = headerActions.querySelector('a[href*="register.html"]');
                 if (loginLink) loginLink.style.display = 'none';
                 if (registerLink) registerLink.style.display = 'none';
 
@@ -452,13 +456,135 @@ const ChileoUI = {
                         Keluar
                     </button>
                 `;
-            } else {
+            }
+
+            // Mobile Compact Badge (di baris atas samping hamburger)
+            if (mobileCompactBadge) {
+                mobileCompactBadge.innerHTML = `
+                    <span class="px-2 py-1 text-[11px] font-semibold border rounded-lg ${roleColor} flex items-center gap-1 shadow-sm max-w-[130px] truncate">
+                        <span>👤</span>
+                        <span class="truncate">${session.name.split(' ')[0]}</span>
+                    </span>
+                `;
+            }
+
+            // Mobile Auth Actions (di dalam dropdown)
+            if (mobileAuthActions) {
+                mobileAuthActions.innerHTML = `
+                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 truncate">
+                                <span class="text-base">👤</span>
+                                <div class="truncate">
+                                    <strong class="text-xs text-gray-900 block truncate">${session.name}</strong>
+                                    <span class="text-[10px] text-gray-500 truncate block">${session.email || 'Akun Aktif'}</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full ${roleColor} flex-shrink-0">${roleLabel}</span>
+                        </div>
+                        <button type="button" onclick="ChileoDB.logout()" class="w-full py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition text-center">
+                            Keluar dari Akun
+                        </button>
+                    </div>
+                `;
+            }
+        } else {
+            // Mode Tamu / Guest
+            if (headerActions) {
+                const loginLink = headerActions.querySelector('a[href*="login.html"]');
+                const registerLink = headerActions.querySelector('a[href*="register.html"]');
                 if (loginLink) loginLink.style.display = '';
                 if (registerLink) registerLink.style.display = '';
                 const userBox = headerActions.querySelector('.chileo-auth-box');
                 if (userBox) userBox.remove();
             }
+
+            if (mobileCompactBadge) {
+                mobileCompactBadge.innerHTML = '';
+            }
+
+            if (mobileAuthActions) {
+                mobileAuthActions.innerHTML = `
+                    <div class="grid grid-cols-2 gap-2 text-center text-xs font-semibold">
+                        <a href="login.html" class="py-2.5 px-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition">Masuk</a>
+                        <a href="register.html" class="py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition">Daftar Akun</a>
+                    </div>
+                `;
+            }
         }
+
+        // 3. Inisialisasi Hamburger Menu & Dropdown Mobile
+        this.initMobileNavbar();
+    },
+
+    initMobileNavbar: function() {
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-dropdown-menu');
+        const iconOpen = document.getElementById('hamburger-icon-open');
+        const iconClose = document.getElementById('hamburger-icon-close');
+
+        if (!menuBtn || !mobileMenu) return;
+
+        // Cegah registrasi listener berulang
+        if (menuBtn.dataset.listenerBound === 'true') return;
+        menuBtn.dataset.listenerBound = 'true';
+
+        function openMenu() {
+            mobileMenu.classList.remove('hidden');
+            if (iconOpen) iconOpen.classList.add('hidden');
+            if (iconClose) iconClose.classList.remove('hidden');
+            menuBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMenu() {
+            mobileMenu.classList.add('hidden');
+            if (iconOpen) iconOpen.classList.remove('hidden');
+            if (iconClose) iconClose.classList.add('hidden');
+            menuBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleMenu() {
+            const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        // Tutup saat link atau tombol di dalam menu mobile diklik (menggunakan event delegation)
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target.closest('a, button')) {
+                closeMenu();
+            }
+        });
+
+        // Tutup saat klik di luar header
+        document.addEventListener('click', (e) => {
+            const header = document.querySelector('header');
+            if (header && !header.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Tutup saat tombol Escape ditekan
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+
+        // Tutup saat layar di-resize ke ukuran desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                closeMenu();
+            }
+        });
     }
 };
 
