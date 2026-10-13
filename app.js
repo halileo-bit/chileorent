@@ -544,17 +544,17 @@ const ChileoUI = {
                 let userBox = headerActions.querySelector('.chileo-auth-box');
                 if (!userBox) {
                     userBox = document.createElement('div');
-                    userBox.className = 'chileo-auth-box flex items-center gap-2 flex-wrap';
+                    userBox.className = 'chileo-auth-box flex items-center gap-2 flex-nowrap shrink-0';
                     headerActions.insertBefore(userBox, headerActions.firstChild);
                 }
 
                 userBox.innerHTML = `
-                    <span class="px-2.5 py-1 text-xs font-medium border rounded-lg ${roleColor} flex items-center gap-1.5 shadow-sm">
+                    <span class="px-2.5 py-1 text-xs font-medium border rounded-lg ${roleColor} flex items-center gap-1.5 shadow-sm whitespace-nowrap">
                         <span>👤</span>
                         <strong class="max-w-[120px] truncate sm:max-w-none">${session.name}</strong>
                         <span class="text-[10px] font-bold uppercase opacity-75">(${roleLabel})</span>
                     </span>
-                    <button type="button" onclick="ChileoDB.logout()" class="px-2.5 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition">
+                    <button type="button" onclick="ChileoDB.logout()" class="px-2.5 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition whitespace-nowrap">
                         Keluar
                     </button>
                 `;
