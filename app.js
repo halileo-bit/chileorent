@@ -343,6 +343,107 @@ const ChileoDB = {
     }
 };
 
+// =========================================================================
+// PERTEMUAN 4: TASK 01 - CONNECT TO API (FETCH API & REST DATA INTEGRATION)
+// Sesuai alur materi: Web Page -> JavaScript -> Fetch API -> REST API -> JSON
+// =========================================================================
+const ChileoAPI = {
+    ENDPOINT: 'data/costumes.json',
+    ALT_ENDPOINT: 'api/costumes.json',
+    lastResponse: null,
+    lastFetchedAt: null,
+
+    /**
+     * Mengambil data kostum dari REST API endpoint menggunakan Fetch API
+     * Menggunakan Promise .then() sesuai persis dengan sintaks materi kuliah Pertemuan 4
+     * 
+     * fetch('data/costumes.json')
+     *   .then(res => res.json())
+     *   .then(data => { // proses data })
+     */
+    fetchCostumes: function(onSuccess, onError) {
+        const startTime = performance.now();
+        console.log(`[ChileoAPI] Mengirim GET request ke: ${this.ENDPOINT}`);
+
+        return fetch(this.ENDPOINT)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP Error: Status ${res.status} (${res.statusText})`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                const duration = Math.round(performance.now() - startTime);
+                console.log(`[ChileoAPI] REST API berhasil merespons dalam ${duration}ms:`, data);
+                
+                // Normalisasi dwibahasa: mendukung struktur bahasa Indonesia sesuai slide maupun camelCase
+                const normalized = data.map(item => ({
+                    ...item,
+                    title: item.title || item.judul,
+                    character: item.character || item.karakter,
+                    series: item.series || item.seri,
+                    category: item.category || item.kategori,
+                    size: item.size || item.ukuran,
+                    price: item.price || item.harga,
+                    includes: item.includes || item.kelengkapan || [],
+                    image: item.image || item.gambar,
+                    description: item.description || item.deskripsi,
+                    owner: item.owner || item.pemilik,
+                    rentCount: item.rentCount || item.jumlah_sewa || 0
+                }));
+
+                ChileoAPI.lastResponse = normalized;
+                ChileoAPI.lastFetchedAt = new Date();
+
+                // Sinkronkan ke local storage agar kompatibel dengan modul transaksi lainnya
+                localStorage.setItem(STORAGE_KEYS.COSTUMES, JSON.stringify(normalized));
+
+                if (typeof onSuccess === 'function') {
+                    onSuccess(normalized, {
+                        source: 'REST API (Fetch)',
+                        endpoint: this.ENDPOINT,
+                        duration: duration,
+                        timestamp: ChileoAPI.lastFetchedAt,
+                        status: 200,
+                        count: normalized.length
+                    });
+                }
+                return normalized;
+            })
+            .catch(err => {
+                console.warn('[ChileoAPI] Fetch API dialihkan ke fallback lokal (misal jika dibuka langsung lewat file:// browser tanpa web server):', err);
+                const cachedData = ChileoDB.getCostumes();
+                
+                if (typeof onError === 'function') {
+                    onError(cachedData, {
+                        source: 'LocalStorage Fallback (CORS/Offline)',
+                        error: err.message,
+                        endpoint: this.ENDPOINT,
+                        count: cachedData.length
+                    });
+                } else if (typeof onSuccess === 'function') {
+                    onSuccess(cachedData, {
+                        source: 'LocalStorage Fallback',
+                        error: err.message,
+                        endpoint: this.ENDPOINT,
+                        count: cachedData.length
+                    });
+                }
+                return cachedData;
+            });
+    },
+
+    /**
+     * Mengambil detail kostum tunggal berdasarkan ID via API
+     */
+    getCostumeById: function(id, callback) {
+        return this.fetchCostumes(data => {
+            const costume = data.find(c => String(c.id) === String(id)) || data[0];
+            if (typeof callback === 'function') callback(costume);
+        });
+    }
+};
+
 // UI SYNCHRONIZER: MENYESUAIKAN NAVBAR SESUAI TIPE PERAN PENDAFTAR / LOGIN
 const ChileoUI = {
     syncNavbar: function() {
@@ -418,6 +519,7 @@ const ChileoUI = {
 
         // 2. Sinkronkan tombol Auth Header Desktop & Mobile Dropdown
         const headerActions = document.getElementById('desktop-auth-actions') || 
+                              document.querySelector('.header-auth-actions') ||
                               document.querySelector('header .flex.items-center.gap-2.order-2') ||
                               document.querySelector('header .flex.items-center.gap-2:not(#navigasi-utama)');
 
@@ -514,37 +616,39 @@ const ChileoUI = {
         }
 
         // 3. Inisialisasi Hamburger Menu & Dropdown Mobile
-        this.initMobileNavbar();
+        this.initMobileMenu();
     },
 
-    initMobileNavbar: function() {
-        const menuBtn = document.getElementById('mobile-menu-btn');
+    /**
+     * Inisialisasi Tombol Hamburger & Dropdown Menu Navigasi Mobile
+     */
+    initMobileMenu: function() {
+        const toggleBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-dropdown-menu');
-        const iconOpen = document.getElementById('hamburger-icon-open');
-        const iconClose = document.getElementById('hamburger-icon-close');
+        if (!toggleBtn || !mobileMenu) return;
 
-        if (!menuBtn || !mobileMenu) return;
+        if (toggleBtn.dataset.listenerAttached === 'true') return;
+        toggleBtn.dataset.listenerAttached = 'true';
 
-        // Cegah registrasi listener berulang
-        if (menuBtn.dataset.listenerBound === 'true') return;
-        menuBtn.dataset.listenerBound = 'true';
+        const iconOpen = document.getElementById('hamburger-icon-open') || toggleBtn.querySelector('.icon-hamburger');
+        const iconClose = document.getElementById('hamburger-icon-close') || toggleBtn.querySelector('.icon-close');
 
         function openMenu() {
             mobileMenu.classList.remove('hidden');
             if (iconOpen) iconOpen.classList.add('hidden');
             if (iconClose) iconClose.classList.remove('hidden');
-            menuBtn.setAttribute('aria-expanded', 'true');
+            toggleBtn.setAttribute('aria-expanded', 'true');
         }
 
         function closeMenu() {
             mobileMenu.classList.add('hidden');
             if (iconOpen) iconOpen.classList.remove('hidden');
             if (iconClose) iconClose.classList.add('hidden');
-            menuBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-expanded', 'false');
         }
 
         function toggleMenu() {
-            const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+            const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
             if (isExpanded) {
                 closeMenu();
             } else {
@@ -552,7 +656,7 @@ const ChileoUI = {
             }
         }
 
-        menuBtn.addEventListener('click', (e) => {
+        toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             toggleMenu();
         });
@@ -572,7 +676,7 @@ const ChileoUI = {
             }
         });
 
-        // Tutup saat tombol Escape ditekan
+        // Tutup dengan tombol Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeMenu();
@@ -585,6 +689,10 @@ const ChileoUI = {
                 closeMenu();
             }
         });
+    },
+
+    initMobileNavbar: function() {
+        this.initMobileMenu();
     }
 };
 
@@ -594,9 +702,11 @@ initChileorentData();
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         ChileoUI.syncNavbar();
+        ChileoUI.initMobileMenu();
     });
 } else {
     ChileoUI.syncNavbar();
+    ChileoUI.initMobileMenu();
 }
 
 // HELPER: Format Rupiah
